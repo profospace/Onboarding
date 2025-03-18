@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { base_url } from '../utils/base_url';
 
-const API_BASE_URL = 'http://localhost:5053/api/salesmen';
+const API_BASE_URL = `${base_url}/api/salesmen`;
 
 const SalesmanManagementPage = ({ user, onLogout }) => {
     // State for salesmen data
     const [salesmen, setSalesmen] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const navigate = useNavigate()
 
     // State for form data
     const [formData, setFormData] = useState({
@@ -397,6 +400,15 @@ const SalesmanManagementPage = ({ user, onLogout }) => {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div className="flex space-x-2">
+                                                <button
+                                                    onClick={() => {
+                                                        navigate(`/salesman/stats/${salesman._id}`);
+                                                        // setIsResetPasswordModalOpen(true);
+                                                    }}
+                                                    className="text-blue-600 hover:text-blue-900"
+                                                >
+                                                    Stats
+                                                </button>
                                                 <button
                                                     onClick={() => {
                                                         setSelectedSalesmanId(salesman._id);

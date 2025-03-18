@@ -109,6 +109,16 @@ const AppLayout = ({ children }) => {
             label: <Link to="/onboarding">Add Property</Link>,
         },
         {
+            key: 'draft',
+            icon: <BankOutlined />,
+            label: <Link to="/draft">Your Drafts</Link>,
+        },
+        {
+            key: 'users',
+            icon: <BankOutlined />,
+            label: <Link to="/users-management">Users Management</Link>,
+        },
+        {
             key: 'settings',
             icon: <SettingOutlined />,
             label: <Link to="/settings">Settings</Link>,
@@ -132,6 +142,11 @@ const AppLayout = ({ children }) => {
             key: 'add-property',
             icon: <PlusOutlined />,
             label: <Link to="/onboarding">Add Property</Link>,
+        },
+        {
+            key: 'draft',
+            icon: <BankOutlined />,
+            label: <Link to="/draft">Your Drafts</Link>,
         },
         {
             key: 'settings',

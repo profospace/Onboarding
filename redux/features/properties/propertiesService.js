@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { salesmanAxios } from '../../../utils/config';
+import { base_url } from '../../../utils/base_url';
 
-const API_BASE_URL = 'http://localhost:5053/api/salesmen';
+const API_BASE_URL = `${base_url}/api/salesmen`;
 
 // Get properties for the current salesman
 const getProperties = async (filters) => {

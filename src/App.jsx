@@ -286,6 +286,11 @@ import PropertyManagementPage from './PropertyManagementPage';
 import AdminSignup from './AdminSignup';
 import SalesmanDashboard from './SalesmanDashboard';
 import SettingsPage from './SettingsPage';
+import SalesmanStats from './SalesmanStats';
+import { Toaster } from 'react-hot-toast';
+import SalesmanProfile from './SalesmanProfile';
+import Draft from './Draft';
+import UsersManagement from "./UsersManagement"
 
 // Route wrapper with layout
 const ProtectedRouteWithLayout = ({ element }) => (
@@ -325,6 +330,8 @@ function App() {
           },
         }}
       >
+        <Toaster position="top-center" />
+
         <Router>
           <Routes>
             {/* Public routes */}
@@ -334,6 +341,9 @@ function App() {
             <Route path="/admin-signup" element={<AdminRouteWithLayout element={<AdminSignup />} />} />
             <Route path="/salesman-management" element={<AdminRouteWithLayout element={<SalesmanManagementPage />} />} />
             <Route path="/property-management" element={<AdminRouteWithLayout element={<PropertyManagementPage />} />} />
+            <Route path="/salesman/stats/:id" element={<AdminRouteWithLayout element={<SalesmanStats />} />} />
+            <Route path="/salesman/profile/:id" element={<AdminRouteWithLayout element={<SalesmanProfile />} />} />
+            <Route path="/users-management" element={<AdminRouteWithLayout element={<UsersManagement />} />} />
 
             {/* Salesman routes */}
             <Route path="/salesman/dashboard" element={<SalesmanRouteWithLayout element={<SalesmanDashboard />} />} />
@@ -342,10 +352,15 @@ function App() {
 
             {/* Protected routes (both admin and salesman) */}
             <Route path="/onboarding" element={<ProtectedRouteWithLayout element={<RealEstateOnboarding />} />} />
+            <Route path="/draft" element={<ProtectedRouteWithLayout element={<Draft />} />} />
             <Route path="/settings" element={<ProtectedRouteWithLayout element={<SettingsPage />} />} />
+
+
 
             {/* Redirect to appropriate default page */}
             <Route path="/" element={<Navigate to="/login" />} />
+
+            
           </Routes>
         </Router>
       </ConfigProvider>

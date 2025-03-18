@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { base_url } from '../../../utils/base_url';
 
 // Base URLs for different user types
-const API_BASE_URL = 'http://localhost:5053/api';
+const API_BASE_URL = `${base_url}/api`;
 const SALESMAN_API = `${API_BASE_URL}/salesmen`;
 const ADMIN_API = `${API_BASE_URL}/adminSales`;
 

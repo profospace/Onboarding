@@ -165,6 +165,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { base_url } from '../utils/base_url';
 
 const AdminSignup = ({ user }) => {
     const navigate = useNavigate();
@@ -204,7 +205,7 @@ const AdminSignup = ({ user }) => {
         setError(null);
 
         try {
-            const response = await fetch('http://localhost:5053/api/adminSales/create', {
+            const response = await fetch(`${base_url}/api/adminSales/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

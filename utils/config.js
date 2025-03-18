@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { base_url } from './base_url';
 
 // Base API configuration
-const API_BASE_URL = 'http://localhost:5053/api';
+const API_BASE_URL = `${base_url}/api`;
 
 // Salesman API endpoints
 export const salesmanAPI = {

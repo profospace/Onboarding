@@ -158,6 +158,7 @@ import {
     ResponsiveContainer
 } from 'recharts';
 import { TrendingUp, TrendingDown, Eye, Home, Clock, CheckCircle, RefreshCw } from 'lucide-react';
+import { base_url } from '../utils/base_url';
 
 const SalesmanDashboard = () => {
     const [stats, setStats] = useState({
@@ -179,7 +180,7 @@ const SalesmanDashboard = () => {
             const details = JSON.parse(localStorage.getItem('user')) || ''; // Replace with your actual user ID storage method
             // console.log("details", details)
 
-            const response = await fetch(`http://localhost:5053/api/salesmen/${details?._id}/dashboard`, {
+            const response = await fetch(`${base_url}/api/salesmen/${details?._id}/dashboard`, {
                 headers: {
                     'Authorization': `Bearer ${details?.token}` // Replace with your actual token storage method
                 }

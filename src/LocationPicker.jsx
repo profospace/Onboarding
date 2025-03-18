@@ -281,6 +281,13 @@ const LocationPicker = ({ address, city, onLocationSelect }) => {
         }
     };
 
+    useEffect(
+        ()=>{
+            console.log(import.meta.env.VITE_GOOGLE_API_KEY)
+
+        },[]
+    )
+
     return (
         <div className="mb-6">
             <div className="flex justify-between items-center mb-2">
