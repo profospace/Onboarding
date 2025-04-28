@@ -320,7 +320,7 @@ const PropertyManagementPage = ({ user, onLogout }) => {
         setSelectedPropertyId(property.post_id);
         setIsViewModalOpen(true);
 
-        
+
     };
 
     // Open status change modal
@@ -768,7 +768,7 @@ const PropertyManagementPage = ({ user, onLogout }) => {
                                             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                         />
                                     </th>
-                                    <th
+                                    {/* <th
                                         scope="col"
                                         className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                                         onClick={() => handleSort('post_id')}
@@ -779,7 +779,7 @@ const PropertyManagementPage = ({ user, onLogout }) => {
                                                 {sortOrder === 'asc' ? '↑' : '↓'}
                                             </span>
                                         )}
-                                    </th>
+                                    </th> */}
                                     <th
                                         scope="col"
                                         className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
@@ -792,6 +792,19 @@ const PropertyManagementPage = ({ user, onLogout }) => {
                                             </span>
                                         )}
                                     </th>
+                                    <th
+                                        scope="col"
+                                        className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                                    // onClick={() => handleSort('post_title')}
+                                    >
+                                        Salesman
+                                        {/* {sortField === 'post_title' && (
+                                            <span className="ml-1">
+                                                {sortOrder === 'asc' ? '↑' : '↓'}
+                                            </span>
+                                        )} */}
+                                    </th>
+
                                     <th
                                         scope="col"
                                         className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
@@ -868,9 +881,9 @@ const PropertyManagementPage = ({ user, onLogout }) => {
                                                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                             />
                                         </td>
-                                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {/* <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {property.post_id}
-                                        </td>
+                                        </td> */}
                                         <td className="px-4 py-4 ">
                                             <div className="flex items-center">
                                                 <div className="h-10 w-10 flex-shrink-0">
@@ -894,8 +907,14 @@ const PropertyManagementPage = ({ user, onLogout }) => {
                                             </div>
                                         </td>
                                         <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <div>{property?.salesman?.name || 'N/A'}</div>
+                                            <div>{property?.salesman?.email || 'N/A'}</div>
+                                            <div>{property?.salesman?.phone || 'N/A'}</div>
+                                        </td>
+                                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {property.type_name || 'N/A'}
                                         </td>
+
                                         <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {property.city || 'N/A'}
                                             {property.state && `, ${property.state}`}
