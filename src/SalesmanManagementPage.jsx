@@ -161,7 +161,7 @@ const SalesmanManagementPage = ({ user, onLogout }) => {
     const handleDeleteSalesman = async () => {
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`${API_BASE_URL}/salesmen/${selectedSalesmanId}`, {
+            await axios.delete(`${API_BASE_URL}/${selectedSalesmanId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
