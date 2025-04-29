@@ -291,6 +291,7 @@ import { Toaster } from 'react-hot-toast';
 import SalesmanProfile from './SalesmanProfile';
 import Draft from './Draft';
 import UsersManagement from "./UsersManagement"
+import EditPropertyPage from './EditPropertyPage';
 
 // Route wrapper with layout
 const ProtectedRouteWithLayout = ({ element }) => (
@@ -351,6 +352,7 @@ function App() {
             {/* <Route path="/onboarding" element={<SalesmanRouteWithLayout element={<RealEstateOnboarding />} />} /> */}
 
             {/* Protected routes (both admin and salesman) */}
+            <Route path="/edit/:id" element={<ProtectedRouteWithLayout element={<EditPropertyPage />} />} />
             <Route path="/onboarding" element={<ProtectedRouteWithLayout element={<RealEstateOnboarding />} />} />
             <Route path="/draft" element={<ProtectedRouteWithLayout element={<Draft />} />} />
             <Route path="/settings" element={<ProtectedRouteWithLayout element={<SettingsPage />} />} />

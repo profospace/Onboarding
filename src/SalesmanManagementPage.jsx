@@ -145,7 +145,7 @@ const SalesmanManagementPage = ({ user, onLogout }) => {
     const handleResetPassword = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post(`${API_BASE_URL}/salesmen/${selectedSalesmanId}/reset-password`, {}, {
+            const response = await axios.post(`${API_BASE_URL}/${selectedSalesmanId}/reset-password`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

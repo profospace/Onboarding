@@ -89,6 +89,8 @@ const getStats = async () => {
     }
 };
 
+
+
 const propertiesService = {
     getProperties,
     deleteProperty,
