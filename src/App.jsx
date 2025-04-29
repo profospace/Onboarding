@@ -270,6 +270,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ConfigProvider } from 'antd';
+import { LoadScript } from '@react-google-maps/api';
 
 // Import layout component
 import AppLayout from './components/Layout/AppLayout';
@@ -323,6 +324,8 @@ const SalesmanRouteWithLayout = ({ element }) => (
 function App() {
   return (
     <>
+      <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_API_KEY}>
+
       <ConfigProvider
         theme={{
           token: {
@@ -366,6 +369,8 @@ function App() {
           </Routes>
         </Router>
       </ConfigProvider>
+      </LoadScript>
+
     </>
   );
 }

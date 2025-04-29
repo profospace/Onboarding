@@ -1,6 +1,6 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, Marker } from '@react-google-maps/api';
 
 const containerStyle = {
     width: '100%',
@@ -195,7 +195,6 @@ const LocationPicker = ({ address, city, onLocationSelect }) => {
                 <div className="text-sm text-red-500 mb-2">{locationError}</div>
             )}
 
-            <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_API_KEY}>
                 <GoogleMap
                     mapContainerStyle={containerStyle}
                     center={center}
@@ -218,7 +217,6 @@ const LocationPicker = ({ address, city, onLocationSelect }) => {
                         onLocationSelect(position);
                     }} />}
                 </GoogleMap>
-            </LoadScript>
 
             {marker && (
                 <div className="mt-2 text-sm text-gray-500">
