@@ -33,7 +33,7 @@ import {
     ConfigProvider
 } from 'antd';
 import { logout } from '../../../redux/features/auth/authSlice';
-
+import { SiGoogleadsense } from "react-icons/si";
 const { Header, Sider, Content, Footer } = Layout;
 const { Text } = Typography;
 const { Search } = Input;
@@ -83,6 +83,7 @@ const AppLayout = ({ children }) => {
         if (path === '/onboarding') return ['add-property'];
         if (path === '/salesman-management') return ['salesmen'];
         if (path === '/settings') return ['settings'];
+        if (path === '/sales-leads') return ['sales-leads'];
         return ['dashboard'];
     };
 
@@ -142,6 +143,11 @@ const AppLayout = ({ children }) => {
             key: 'add-property',
             icon: <PlusOutlined />,
             label: <Link to="/onboarding">Add Property</Link>,
+        },
+        {
+            key: 'sales-leads',
+            icon: <SiGoogleadsense />,
+            label: <Link to="/sales-leads">Create Leads</Link>,
         },
         {
             key: 'draft',

@@ -293,6 +293,7 @@ import SalesmanProfile from './SalesmanProfile';
 import Draft from './Draft';
 import UsersManagement from "./UsersManagement"
 import EditPropertyPage from './EditPropertyPage';
+import SalesmanLeads from './SalesmanLeads';
 
 // Route wrapper with layout
 const ProtectedRouteWithLayout = ({ element }) => (
@@ -352,6 +353,7 @@ function App() {
             {/* Salesman routes */}
             <Route path="/salesman/dashboard" element={<SalesmanRouteWithLayout element={<SalesmanDashboard />} />} />
             <Route path="/dashboard" element={<SalesmanRouteWithLayout element={<DashboardPage />} />} />
+            <Route path="/sales-leads" element={<SalesmanRouteWithLayout element={<SalesmanLeads />} />} />
             {/* <Route path="/onboarding" element={<SalesmanRouteWithLayout element={<RealEstateOnboarding />} />} /> */}
 
             {/* Protected routes (both admin and salesman) */}
