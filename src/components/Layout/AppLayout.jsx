@@ -105,6 +105,11 @@ const AppLayout = ({ children }) => {
             label: <Link to="/property-management">Properties Manage</Link>,
         },
         {
+            key: 'sales-leads',
+            icon: <SiGoogleadsense />,
+            label: <Link to="/sales-leads">Create Leads</Link>,
+        },
+        {
             key: 'add-property',
             icon: <PlusOutlined />,
             label: <Link to="/onboarding">Add Property</Link>,

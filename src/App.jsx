@@ -353,10 +353,10 @@ function App() {
             {/* Salesman routes */}
             <Route path="/salesman/dashboard" element={<SalesmanRouteWithLayout element={<SalesmanDashboard />} />} />
             <Route path="/dashboard" element={<SalesmanRouteWithLayout element={<DashboardPage />} />} />
-            <Route path="/sales-leads" element={<SalesmanRouteWithLayout element={<SalesmanLeads />} />} />
             {/* <Route path="/onboarding" element={<SalesmanRouteWithLayout element={<RealEstateOnboarding />} />} /> */}
 
             {/* Protected routes (both admin and salesman) */}
+              <Route path="/sales-leads" element={<ProtectedRouteWithLayout element={<SalesmanLeads />} />} />
             <Route path="/edit/:id" element={<ProtectedRouteWithLayout element={<EditPropertyPage />} />} />
             <Route path="/onboarding" element={<ProtectedRouteWithLayout element={<RealEstateOnboarding />} />} />
             <Route path="/draft" element={<ProtectedRouteWithLayout element={<Draft />} />} />
