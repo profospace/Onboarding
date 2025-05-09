@@ -28,6 +28,9 @@ import EditPropertyPage from './EditPropertyPage';
 import SalesmanLeads from './SalesmanLeads';
 import LocationAccessStatus from './components/LocationAccess/FloatingLocationButton';
 import FloatingLocationButton from './components/LocationAccess/FloatingLocationButton';
+import LeadsPage from './pages/SalesmanLeads/LeadsPage';
+import LeadDetailPage from './pages/SalesmanLeads/LeadDetailPage';
+import EditLeadPage from './pages/SalesmanLeads/EditLeadPage';
 
 // Route wrapper with layout
 const ProtectedRouteWithLayout = ({ element }) => (
@@ -61,50 +64,56 @@ function App() {
     <>
       <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_API_KEY} libraries={["places"]} >
 
-      <ConfigProvider
-        theme={{
-          token: {
-            colorPrimary: '#1677FF',
-            borderRadius: 6,
-          },
-        }}
-      >
-        <Toaster position="top-center" />
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: '#1677FF',
+              borderRadius: 6,
+            },
+          }}
+        >
+          <Toaster position="top-center" />
           <FloatingLocationButton />
-        <Router>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/login" element={<LoginPage />} />
+          <Router>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/login" element={<LoginPage />} />
 
-            {/* Admin routes */}
-            <Route path="/admin-signup" element={<AdminRouteWithLayout element={<AdminSignup />} />} />
-            <Route path="/salesman-management" element={<AdminRouteWithLayout element={<SalesmanManagementPage />} />} />
-            <Route path="/property-management" element={<AdminRouteWithLayout element={<PropertyManagementPage />} />} />
-            <Route path="/salesman/stats/:id" element={<AdminRouteWithLayout element={<SalesmanStats />} />} />
-            <Route path="/salesman/profile/:id" element={<AdminRouteWithLayout element={<SalesmanProfile />} />} />
-            <Route path="/users-management" element={<AdminRouteWithLayout element={<UsersManagement />} />} />
+              {/* Admin routes */}
+              <Route path="/admin-signup" element={<AdminRouteWithLayout element={<AdminSignup />} />} />
+              <Route path="/salesman-management" element={<AdminRouteWithLayout element={<SalesmanManagementPage />} />} />
+              <Route path="/property-management" element={<AdminRouteWithLayout element={<PropertyManagementPage />} />} />
+              <Route path="/salesman/stats/:id" element={<AdminRouteWithLayout element={<SalesmanStats />} />} />
+              <Route path="/salesman/profile/:id" element={<AdminRouteWithLayout element={<SalesmanProfile />} />} />
+              <Route path="/users-management" element={<AdminRouteWithLayout element={<UsersManagement />} />} />
 
-            {/* Salesman routes */}
-            <Route path="/salesman/dashboard" element={<SalesmanRouteWithLayout element={<SalesmanDashboard />} />} />
-            <Route path="/dashboard" element={<SalesmanRouteWithLayout element={<DashboardPage />} />} />
-            {/* <Route path="/onboarding" element={<SalesmanRouteWithLayout element={<RealEstateOnboarding />} />} /> */}
+              {/* Salesman routes */}
+              <Route path="/salesman/dashboard" element={<SalesmanRouteWithLayout element={<SalesmanDashboard />} />} />
+              <Route path="/dashboard" element={<SalesmanRouteWithLayout element={<DashboardPage />} />} />
+              {/* <Route path="/onboarding" element={<SalesmanRouteWithLayout element={<RealEstateOnboarding />} />} /> */}
 
-            {/* Protected routes (both admin and salesman) */}
+              {/* Protected routes (both admin and salesman) */}
               <Route path="/sales-leads" element={<ProtectedRouteWithLayout element={<SalesmanLeads />} />} />
-            <Route path="/edit/:id" element={<ProtectedRouteWithLayout element={<EditPropertyPage />} />} />
-            <Route path="/onboarding" element={<ProtectedRouteWithLayout element={<RealEstateOnboarding />} />} />
-            <Route path="/draft" element={<ProtectedRouteWithLayout element={<Draft />} />} />
-            <Route path="/settings" element={<ProtectedRouteWithLayout element={<SettingsPage />} />} />
+              <Route path="/edit/:id" element={<ProtectedRouteWithLayout element={<EditPropertyPage />} />} />
+              <Route path="/onboarding" element={<ProtectedRouteWithLayout element={<RealEstateOnboarding />} />} />
+              <Route path="/draft" element={<ProtectedRouteWithLayout element={<Draft />} />} />
+              <Route path="/settings" element={<ProtectedRouteWithLayout element={<SettingsPage />} />} />
+
+              <Route path="/leads" element={<ProtectedRouteWithLayout element={<LeadsPage />} />} />
+              <Route path="/lead/:id" element={<ProtectedRouteWithLayout element={<LeadDetailPage />} />} />
+              <Route path="/edit-lead/:id" element={<ProtectedRouteWithLayout element={<EditLeadPage />} />} />
 
 
 
-            {/* Redirect to appropriate default page */}
-            <Route path="/" element={<Navigate to="/login" />} />
 
-            
-          </Routes>
-        </Router>
-      </ConfigProvider>
+
+              {/* Redirect to appropriate default page */}
+              <Route path="/" element={<Navigate to="/login" />} />
+
+
+            </Routes>
+          </Router>
+        </ConfigProvider>
       </LoadScript>
 
     </>

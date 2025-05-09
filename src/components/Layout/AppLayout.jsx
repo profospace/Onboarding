@@ -84,6 +84,7 @@ const AppLayout = ({ children }) => {
         if (path === '/salesman-management') return ['salesmen'];
         if (path === '/settings') return ['settings'];
         if (path === '/sales-leads') return ['sales-leads'];
+        if (path === '/leads') return ['leads'];
         return ['dashboard'];
     };
 
@@ -103,6 +104,11 @@ const AppLayout = ({ children }) => {
             key: 'properties',
             icon: <BankOutlined />,
             label: <Link to="/property-management">Properties Manage</Link>,
+        },
+        {
+            key: 'leads',
+            icon: <SiGoogleadsense />,
+            label: <Link to="/leads">All Leads</Link>,
         },
         {
             key: 'sales-leads',
@@ -148,6 +154,11 @@ const AppLayout = ({ children }) => {
             key: 'add-property',
             icon: <PlusOutlined />,
             label: <Link to="/onboarding">Add Property</Link>,
+        },
+        {
+            key: 'leads',
+            icon: <SiGoogleadsense />,
+            label: <Link to="/leads">All Leads</Link>,
         },
         {
             key: 'sales-leads',
