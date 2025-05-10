@@ -41,7 +41,7 @@ const LeadsPage = () => {
             setLoading(false);
         }
     };
-
+console.log("leads" , leads)
     // Load leads on initial render and when dependencies change
     useEffect(() => {
         loadLeads();

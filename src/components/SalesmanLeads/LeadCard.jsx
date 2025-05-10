@@ -174,6 +174,9 @@ const LeadCard = ({ lead, onDeleteClick }) => {
                 <div className="text-xs text-gray-500">
                     Created: {formatDate(createdAt)}
                 </div>
+                <div className="text-xs text-gray-500">
+                    Uploaded By: {lead?.salesman?.name}
+                </div>
             </div>
 
             <div className="border-t border-gray-100 p-3 bg-gray-50 flex justify-between">
