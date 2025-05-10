@@ -1400,7 +1400,7 @@ function SalesmanLeads() {
                                             Latitude *
                                         </label>
                                         <input
-                                            type="text"
+                                            type="number"
                                             name="latitude"
                                             value={location.latitude}
                                             onChange={handleLocationInputChange}
@@ -1416,7 +1416,7 @@ function SalesmanLeads() {
                                             Longitude *
                                         </label>
                                         <input
-                                            type="text"
+                                            type="number"
                                             name="longitude"
                                             value={location.longitude}
                                             onChange={handleLocationInputChange}
