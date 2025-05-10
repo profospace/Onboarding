@@ -336,7 +336,7 @@ const LocationPicker = ({ initialLocation, onLocationChange, onAddressChange }) 
                             Latitude *
                         </label>
                         <input
-                            type="text"
+                            type="number"
                             name="latitude"
                             value={location.latitude}
                             onChange={(e) => setLocation({
@@ -355,7 +355,7 @@ const LocationPicker = ({ initialLocation, onLocationChange, onAddressChange }) 
                             Longitude *
                         </label>
                         <input
-                            type="text"
+                            type="number"
                             name="longitude"
                             value={location.longitude}
                             onChange={(e) => setLocation({
