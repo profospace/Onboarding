@@ -19,7 +19,7 @@ const LeadImages = ({ images }) => {
                 <img
                     src={images[activeIndex].url}
                     alt={images[activeIndex].caption || `Property image ${activeIndex + 1}`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                 />
             </div>
 
@@ -45,7 +45,7 @@ const LeadImages = ({ images }) => {
                             <img
                                 src={image.url}
                                 alt={image.caption || `Thumbnail ${index + 1}`}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-contain"
                             />
                         </button>
                     ))}
