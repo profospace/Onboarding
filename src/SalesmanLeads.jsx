@@ -1,5 +1,5 @@
 // import React, { useState, useRef, useEffect } from 'react';
-// import { GoogleMap, Marker } from '@react-google-maps/api';
+// import { GoogleMap, Marker, StandaloneSearchBox } from '@react-google-maps/api';
 // import axios from 'axios';
 // import { toast } from 'react-hot-toast';
 // import { base_url } from '../utils/base_url';
@@ -15,6 +15,9 @@
 //     lat: 20.5937,
 //     lng: 78.9629,
 // };
+
+// // Libraries to load for Google Maps
+// const libraries = ['places'];
 
 // function SalesmanLeads() {
 //     // Form state
@@ -32,9 +35,13 @@
 
 //     // Map reference
 //     const mapRef = useRef(null);
+//     const searchBoxRef = useRef(null);
 
 //     // Loading current location state
 //     const [loadingLocation, setLoadingLocation] = useState(false);
+
+//     // Search address state
+//     const [searchAddress, setSearchAddress] = useState('');
 
 //     // Images state
 //     const [images, setImages] = useState([]);
@@ -63,6 +70,82 @@
 //         mapRef.current = map;
 //     };
 
+//     // Handle search box load
+//     const onSearchBoxLoad = (searchBox) => {
+//         searchBoxRef.current = searchBox;
+//     };
+
+//     // Handle search box place selection
+//     const onPlacesChanged = () => {
+//         if (searchBoxRef.current) {
+//             const places = searchBoxRef.current.getPlaces();
+
+//             if (places.length === 0) {
+//                 return;
+//             }
+
+//             const place = places[0];
+
+//             if (!place.geometry || !place.geometry.location) {
+//                 toast.error('No location details available for this place');
+//                 return;
+//             }
+
+//             // Update location state
+//             const newLocation = {
+//                 latitude: place.geometry.location.lat(),
+//                 longitude: place.geometry.location.lng(),
+//             };
+
+//             setLocation(newLocation);
+
+//             // Update search address
+//             setSearchAddress(place.formatted_address || '');
+
+//             // Pan map to new location
+//             if (mapRef.current) {
+//                 mapRef.current.panTo({
+//                     lat: newLocation.latitude,
+//                     lng: newLocation.longitude
+//                 });
+//                 mapRef.current.setZoom(16);
+//             }
+
+//             toast.success('Location updated');
+//         }
+//     };
+
+//     // Geocode address manually
+//     const handleAddressSearch = () => {
+//         if (!searchAddress.trim() || !geocoderRef.current) {
+//             toast.error('Please enter a valid address');
+//             return;
+//         }
+
+//         geocoderRef.current.geocode({ address: searchAddress }, (results, status) => {
+//             if (status === 'OK' && results[0]) {
+//                 const newLocation = {
+//                     latitude: results[0].geometry.location.lat(),
+//                     longitude: results[0].geometry.location.lng(),
+//                 };
+
+//                 setLocation(newLocation);
+
+//                 if (mapRef.current) {
+//                     mapRef.current.panTo({
+//                         lat: newLocation.latitude,
+//                         lng: newLocation.longitude
+//                     });
+//                     mapRef.current.setZoom(16);
+//                 }
+
+//                 toast.success('Location found');
+//             } else {
+//                 toast.error('Could not find location. Please try a different search.');
+//             }
+//         });
+//     };
+
 //     // Function to get current location
 //     const getCurrentLocation = () => {
 //         setLoadingLocation(true);
@@ -81,6 +164,19 @@
 //                             lat: newLocation.latitude,
 //                             lng: newLocation.longitude
 //                         });
+//                         mapRef.current.setZoom(16);
+//                     }
+
+//                     // Try to get address for the current location
+//                     if (geocoderRef.current) {
+//                         geocoderRef.current.geocode(
+//                             { location: { lat: newLocation.latitude, lng: newLocation.longitude } },
+//                             (results, status) => {
+//                                 if (status === 'OK' && results[0]) {
+//                                     setSearchAddress(results[0].formatted_address);
+//                                 }
+//                             }
+//                         );
 //                     }
 
 //                     setLoadingLocation(false);
@@ -110,6 +206,47 @@
 //             longitude: event.latLng.lng(),
 //         };
 //         setLocation(newLocation);
+
+//         // Update address for the new location
+//         if (geocoderRef.current) {
+//             geocoderRef.current.geocode(
+//                 { location: { lat: newLocation.latitude, lng: newLocation.longitude } },
+//                 (results, status) => {
+//                     if (status === 'OK' && results[0]) {
+//                         setSearchAddress(results[0].formatted_address);
+//                     } else {
+//                         setSearchAddress('');
+//                     }
+//                 }
+//             );
+//         }
+
+//         toast.success('Marker placed');
+//     };
+
+//     // Handle marker drag to update position
+//     const handleMarkerDragEnd = (event) => {
+//         const newLocation = {
+//             latitude: event.latLng.lat(),
+//             longitude: event.latLng.lng(),
+//         };
+//         setLocation(newLocation);
+
+//         // Update address for the new location
+//         if (geocoderRef.current) {
+//             geocoderRef.current.geocode(
+//                 { location: { lat: newLocation.latitude, lng: newLocation.longitude } },
+//                 (results, status) => {
+//                     if (status === 'OK' && results[0]) {
+//                         setSearchAddress(results[0].formatted_address);
+//                     } else {
+//                         setSearchAddress('');
+//                     }
+//                 }
+//             );
+//         }
+
+//         toast.success('Location updated');
 //     };
 
 //     // Handle manual location input changes
@@ -133,6 +270,11 @@
 //                 });
 //             }
 //         }
+//     };
+
+//     // Handle search address input changes
+//     const handleSearchAddressChange = (e) => {
+//         setSearchAddress(e.target.value);
 //     };
 
 //     // Handle form field changes
@@ -206,20 +348,6 @@
 
 //     // Form validation
 //     const validateForm = () => {
-//         // if (!formData.propertyName.trim()) {
-//         //     toast.error('Property name is required');
-//         //     return false;
-//         // }
-//         // if (!formData.ownerName.trim()) {
-//         //     toast.error('Owner name is required');
-//         //     return false;
-//         // }
-//         // if (!formData.ownerContact.trim()) {
-//         //     toast.error('Owner contact is required');
-//         //     return false;
-//         // }
-
-
 //         if (images.length === 0) {
 //             toast.error('At least one image is required');
 //             return false;
@@ -244,9 +372,12 @@
 //             leadFormData.append('ownerName', formData.ownerName);
 //             leadFormData.append('ownerContact', formData.ownerContact);
 
-
 //             // Add location
 //             leadFormData.append('location', JSON.stringify(location));
+//             // Add address if available
+//             if (searchAddress) {
+//                 leadFormData.append('address', searchAddress);
+//             }
 
 //             // Add images and captions
 //             images.forEach((image, index) => {
@@ -278,6 +409,7 @@
 //                 latitude: defaultCenter.lat,
 //                 longitude: defaultCenter.lng,
 //             });
+//             setSearchAddress('');
 //             setImages([]);
 //             setImagePreviews([]);
 //             setCaptions(['', '', '', '']);
@@ -343,10 +475,6 @@
 //         );
 //     };
 
-    
-
- 
-
 //     return (
 //         <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-6 px-4">
 //             <div className="max-w-7xl mx-auto">
@@ -385,11 +513,8 @@
 //                                             onChange={handleChange}
 //                                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
 //                                             placeholder="E.g., Sunset Villa, Business Park Tower"
-                                            
 //                                         />
 //                                     </div>
-
-                                    
 //                                 </div>
 
 //                                 {/* Right Column */}
@@ -410,7 +535,6 @@
 //                                             onChange={handleChange}
 //                                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
 //                                             placeholder="Enter owner's full name"
-                                            
 //                                         />
 //                                     </div>
 
@@ -426,7 +550,6 @@
 //                                             onChange={handleChange}
 //                                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
 //                                             placeholder="Phone number or email"
-                                            
 //                                         />
 //                                     </div>
 //                                 </div>
@@ -453,6 +576,39 @@
 //                                 Property Location
 //                             </h2>
 
+//                             {/* Search Box */}
+//                             <div className="mb-4">
+//                                 <label className="block text-sm font-medium text-gray-700 mb-1">
+//                                     Search Location
+//                                 </label>
+//                                 <div className="flex space-x-1.5">
+//                                     <StandaloneSearchBox
+//                                         onLoad={onSearchBoxLoad}
+//                                         onPlacesChanged={onPlacesChanged}
+//                                     >
+//                                         <input
+//                                             type="text"
+//                                             placeholder="Search for address, landmark, city..."
+//                                             value={searchAddress}
+//                                             onChange={handleSearchAddressChange}
+//                                             className=" px-4 py-2 w-[70vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+//                                         />
+//                                     </StandaloneSearchBox>
+//                                     <button
+//                                         type="button"
+//                                         onClick={handleAddressSearch}
+//                                         className="flex-shrink-0 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+//                                     >
+//                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+//                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+//                                         </svg>
+//                                     </button>
+//                                 </div>
+//                                 <p className="text-xs text-gray-500 mt-1">
+//                                     Enter address or drag marker to update location
+//                                 </p>
+//                             </div>
+
 //                             {/* Google Map - Full Width */}
 //                             <div className="border border-gray-300 rounded-lg overflow-hidden shadow-md mb-4">
 //                                 <GoogleMap
@@ -461,9 +617,17 @@
 //                                     zoom={16}
 //                                     onClick={handleMapClick}
 //                                     onLoad={onMapLoad}
+//                                     options={{
+//                                         streetViewControl: false,
+//                                         mapTypeControlOptions: {
+//                                             position: window.google?.maps?.ControlPosition?.TOP_RIGHT
+//                                         }
+//                                     }}
 //                                 >
 //                                     <Marker
 //                                         position={{ lat: location.latitude, lng: location.longitude }}
+//                                         draggable={true}
+//                                         onDragEnd={handleMarkerDragEnd}
 //                                     />
 //                                 </GoogleMap>
 //                             </div>
@@ -478,7 +642,7 @@
 //                                             Latitude *
 //                                         </label>
 //                                         <input
-//                                             type="text"
+//                                             type="number"
 //                                             name="latitude"
 //                                             value={location.latitude}
 //                                             onChange={handleLocationInputChange}
@@ -494,7 +658,7 @@
 //                                             Longitude *
 //                                         </label>
 //                                         <input
-//                                             type="text"
+//                                             type="number"
 //                                             name="longitude"
 //                                             value={location.longitude}
 //                                             onChange={handleLocationInputChange}
@@ -570,6 +734,15 @@
 //                                 </div>
 //                             </div>
 
+//                             {/* Display selected address */}
+//                             {searchAddress && (
+//                                 <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+//                                     <p className="text-sm text-gray-700">
+//                                         <span className="font-medium">Selected Address:</span> {searchAddress}
+//                                     </p>
+//                                 </div>
+//                             )}
+
 //                             {/* Mobile Navigation Buttons */}
 //                             <div className="mt-8 md:hidden flex space-x-3">
 //                                 <button
@@ -601,13 +774,18 @@
 //                                 Property Images
 //                             </h2>
 
-//                             {/* Image Upload */}
-//                             <div className="space-y-4">
+//                             {/* Image Upload Section */}
+//                             <div className="mb-4">
+//                                 <label className="block text-sm font-medium text-gray-700 mb-1">
+//                                     Property Images (up to 4) *
+//                                 </label>
 //                                 <div className="flex items-center justify-center w-full">
-//                                     <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+//                                     <label
+//                                         className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors"
+//                                     >
 //                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
 //                                             <svg
-//                                                 className="w-10 h-10 text-blue-500 mb-3"
+//                                                 className="w-8 h-8 mb-1 text-gray-500"
 //                                                 fill="none"
 //                                                 stroke="currentColor"
 //                                                 viewBox="0 0 24 24"
@@ -617,130 +795,142 @@
 //                                                     strokeLinecap="round"
 //                                                     strokeLinejoin="round"
 //                                                     strokeWidth="2"
-//                                                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+//                                                     d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
 //                                                 ></path>
 //                                             </svg>
 //                                             <p className="text-sm text-gray-500">
-//                                                 <span className="font-semibold text-blue-600">Click to upload</span> or drag and drop
+//                                                 <span className="font-medium">Click to upload</span> or drag and drop
 //                                             </p>
-//                                             <p className="text-xs text-gray-500">
-//                                                 PNG, JPG (MAX. 5MB per image) • {images.length}/4 photos
-//                                             </p>
+//                                             <p className="text-xs text-gray-500">(PNG, JPG, JPEG up to 10MB)</p>
 //                                         </div>
 //                                         <input
 //                                             type="file"
 //                                             className="hidden"
-//                                             accept="image/png, image/jpeg, image/jpg"
+//                                             accept="image/*"
 //                                             multiple
 //                                             onChange={handleImageChange}
 //                                             disabled={images.length >= 4}
 //                                         />
 //                                     </label>
 //                                 </div>
+//                                 <p className="text-xs text-gray-500 mt-1">
+//                                     {images.length}/4 images uploaded
+//                                 </p>
+//                             </div>
 
-// <div>
-//                                     {/* Image previews */}
-//                                     {imagePreviews.length > 0 && (
-//                                         <div className="grid grid-cols-2 gap-4 mt-4">
-//                                             {imagePreviews.map((preview, index) => (
-//                                                 <div
-//                                                     key={index}
-//                                                     className="relative bg-gray-100 p-2 rounded-lg border border-gray-200"
+//                             {/* Image Previews with Captions */}
+//                             {imagePreviews.length > 0 && (
+//                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+//                                     {imagePreviews.map((preview, index) => (
+//                                         <div
+//                                             key={index}
+//                                             className="relative border border-gray-200 rounded-lg overflow-hidden shadow-sm"
+//                                         >
+//                                             <img
+//                                                 src={preview}
+//                                                 alt={`Preview ${index + 1}`}
+//                                                 className="w-full h-48 object-cover"
+//                                             />
+//                                             <button
+//                                                 type="button"
+//                                                 onClick={() => removeImage(index)}
+//                                                 className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+//                                             >
+//                                                 <svg
+//                                                     className="w-4 h-4"
+//                                                     fill="none"
+//                                                     stroke="currentColor"
+//                                                     viewBox="0 0 24 24"
+//                                                     xmlns="http://www.w3.org/2000/svg"
 //                                                 >
-//                                                     <img
-//                                                         src={preview}
-//                                                         alt={`Preview ${index + 1}`}
-//                                                         className="w-full h-40 object-cover rounded-lg"
-//                                                     />
-//                                                     <div className="mt-2">
-//                                                         <input
-//                                                             type="text"
-//                                                             value={captions[index] || ''}
-//                                                             onChange={(e) => handleCaptionChange(index, e.target.value)}
-//                                                             className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
-//                                                             placeholder="Add caption (optional)"
-//                                                         />
-//                                                     </div>
-//                                                     <button
-//                                                         type="button"
-//                                                         onClick={() => removeImage(index)}
-//                                                         className="absolute top-3 right-3 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-//                                                     >
-//                                                         <svg
-//                                                             xmlns="http://www.w3.org/2000/svg"
-//                                                             className="h-4 w-4"
-//                                                             fill="none"
-//                                                             viewBox="0 0 24 24"
-//                                                             stroke="currentColor"
-//                                                         >
-//                                                             <path
-//                                                                 strokeLinecap="round"
-//                                                                 strokeLinejoin="round"
-//                                                                 strokeWidth="2"
-//                                                                 d="M6 18L18 6M6 6l12 12"
-//                                                             />
-//                                                         </svg>
-//                                                     </button>
-//                                                 </div>
-//                                             ))}
+//                                                     <path
+//                                                         strokeLinecap="round"
+//                                                         strokeLinejoin="round"
+//                                                         strokeWidth="2"
+//                                                         d="M6 18L18 6M6 6l12 12"
+//                                                     ></path>
+//                                                 </svg>
+//                                             </button>
+//                                             <div className="p-3">
+//                                                 <input
+//                                                     type="text"
+//                                                     placeholder="Add a caption (optional)"
+//                                                     value={captions[index] || ''}
+//                                                     onChange={(e) => handleCaptionChange(index, e.target.value)}
+//                                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                                                 />
+//                                             </div>
 //                                         </div>
-//                                     )}
+//                                     ))}
 //                                 </div>
+//                             )}
+
+//                             {/* Mobile Navigation Buttons */}
+//                             <div className="mt-8 md:hidden flex space-x-3">
+//                                 <button
+//                                     type="button"
+//                                     onClick={prevStep}
+//                                     className="w-1/2 py-3 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition-colors flex items-center justify-center"
+//                                 >
+//                                     <svg className="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+//                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
+//                                     </svg>
+//                                     Back
+//                                 </button>
+//                                 <button
+//                                     type="submit"
+//                                     disabled={isSubmitting}
+//                                     className={`w-1/2 py-3 rounded-lg font-medium flex items-center justify-center
+//                 ${isSubmitting
+//                                             ? 'bg-gray-400 text-white cursor-not-allowed'
+//                                             : 'bg-green-600 text-white shadow-md hover:bg-green-700 transition-colors'
+//                                         }`}
+//                                 >
+//                                     {isSubmitting ? (
+//                                         <>
+//                                             <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+//                                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+//                                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+//                                             </svg>
+//                                             Submitting...
+//                                         </>
+//                                     ) : (
+//                                         <>
+//                                             Submit Lead
+//                                             <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+//                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+//                                             </svg>
+//                                         </>
+//                                     )}
+//                                 </button>
 //                             </div>
 //                         </div>
 
-//                         {/* Submit Button */}
-//                         <div className="mt-10 flex justify-center">
+//                         {/* Desktop Submit Button - only shown on desktop view */}
+//                         <div className="hidden md:block mt-8">
 //                             <button
 //                                 type="submit"
 //                                 disabled={isSubmitting}
-//                                 className={`flex items-center justify-center px-8 py-3 rounded-lg text-white font-medium text-lg transition-all
-//                                 ${isSubmitting
-//                                         ? 'bg-blue-400 cursor-not-allowed'
-//                                         : 'bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl'
+//                                 className={`w-full py-3 rounded-lg font-medium text-lg flex items-center justify-center
+//             ${isSubmitting
+//                                         ? 'bg-gray-400 text-white cursor-not-allowed'
+//                                         : 'bg-green-600 text-white shadow-md hover:bg-green-700 transition-colors'
 //                                     }`}
 //                             >
 //                                 {isSubmitting ? (
 //                                     <>
-//                                         <svg
-//                                             className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-//                                             xmlns="http://www.w3.org/2000/svg"
-//                                             fill="none"
-//                                             viewBox="0 0 24 24"
-//                                         >
-//                                             <circle
-//                                                 className="opacity-25"
-//                                                 cx="12"
-//                                                 cy="12"
-//                                                 r="10"
-//                                                 stroke="currentColor"
-//                                                 strokeWidth="4"
-//                                             ></circle>
-//                                             <path
-//                                                 className="opacity-75"
-//                                                 fill="currentColor"
-//                                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-//                                             ></path>
+//                                         <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+//                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+//                                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
 //                                         </svg>
-//                                         Creating Lead...
+//                                         Creating Property Lead...
 //                                     </>
 //                                 ) : (
 //                                     <>
-//                                         <svg
-//                                             className="w-5 h-5 mr-2"
-//                                             fill="none"
-//                                             stroke="currentColor"
-//                                             viewBox="0 0 24 24"
-//                                             xmlns="http://www.w3.org/2000/svg"
-//                                         >
-//                                             <path
-//                                                 strokeLinecap="round"
-//                                                 strokeLinejoin="round"
-//                                                 strokeWidth="2"
-//                                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-//                                             ></path>
+//                                         Create Property Lead
+//                                         <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+//                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
 //                                         </svg>
-//                                         Create Lead
 //                                     </>
 //                                 )}
 //                             </button>
@@ -753,8 +943,6 @@
 // }
 
 // export default SalesmanLeads;
-
-
 
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleMap, Marker, StandaloneSearchBox } from '@react-google-maps/api';
@@ -816,11 +1004,28 @@ function SalesmanLeads() {
     const [currentStep, setCurrentStep] = useState(1);
     const totalSteps = 3;
 
+    // Camera states
+    const [showCamera, setShowCamera] = useState(false);
+    const [stream, setStream] = useState(null);
+    const videoRef = useRef(null);
+    const canvasRef = useRef(null);
+    const [capturedPhoto, setCapturedPhoto] = useState(null);
+    const [isCameraActive, setIsCameraActive] = useState(false);
+
     // Initialize geocoder and try to get user's current location on component mount
     useEffect(() => {
         // Try to get user's current location when component mounts
         getCurrentLocation();
     }, []);
+
+    // Clean up camera stream when component unmounts or camera is closed
+    useEffect(() => {
+        return () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, [stream]);
 
     // Initialize geocoder when map is loaded
     const onMapLoad = (map) => {
@@ -1057,6 +1262,118 @@ function SalesmanLeads() {
         }
     };
 
+    // Camera Functions
+    const startCamera = async () => {
+        try {
+            if (images.length >= 4) {
+                toast.error('Maximum 4 images allowed');
+                return;
+            }
+
+            const mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: 'environment', // Use back camera on mobile
+                    width: { ideal: 1920 },
+                    height: { ideal: 1080 }
+                }
+            });
+
+            setStream(mediaStream);
+            setShowCamera(true);
+            setIsCameraActive(true);
+            setCapturedPhoto(null);
+
+            if (videoRef.current) {
+                videoRef.current.srcObject = mediaStream;
+            }
+        } catch (error) {
+            console.error('Error accessing camera:', error);
+            toast.error('Unable to access camera. Please check permissions.');
+        }
+    };
+
+    const stopCamera = () => {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            setStream(null);
+        }
+        setShowCamera(false);
+        setIsCameraActive(false);
+        setCapturedPhoto(null);
+    };
+
+    const capturePhoto = () => {
+        if (videoRef.current && canvasRef.current) {
+            const video = videoRef.current;
+            const canvas = canvasRef.current;
+            const context = canvas.getContext('2d');
+
+            // Set canvas dimensions to match video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Draw video frame to canvas
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convert canvas to blob
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    const file = new File([blob], `camera-photo-${Date.now()}.jpg`, {
+                        type: 'image/jpeg',
+                        lastModified: Date.now()
+                    });
+
+                    const previewUrl = URL.createObjectURL(blob);
+                    setCapturedPhoto(previewUrl);
+                    setIsCameraActive(false);
+
+                    // Stop camera stream
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                    }
+
+                    toast.success('Photo captured! Review and confirm to add.');
+                }
+            }, 'image/jpeg', 0.9);
+        }
+    };
+
+    const confirmCapturedPhoto = () => {
+        if (capturedPhoto) {
+            // Convert captured photo to file and add to images
+            fetch(capturedPhoto)
+                .then(res => res.blob())
+                .then(blob => {
+                    const file = new File([blob], `camera-photo-${Date.now()}.jpg`, {
+                        type: 'image/jpeg',
+                        lastModified: Date.now()
+                    });
+
+                    // Add to images array
+                    setImages(prevImages => [...prevImages, file]);
+                    setImagePreviews(prevPreviews => [...prevPreviews, capturedPhoto]);
+
+                    // Add empty caption
+                    setCaptions(prevCaptions => [
+                        ...prevCaptions.slice(0, images.length),
+                        '',
+                        ...prevCaptions.slice(images.length + 1),
+                    ]);
+
+                    // Close camera
+                    setShowCamera(false);
+                    setCapturedPhoto(null);
+                    toast.success('Photo added successfully!');
+                });
+        }
+    };
+
+    const retakePhoto = () => {
+        setCapturedPhoto(null);
+        setIsCameraActive(true);
+        startCamera();
+    };
+
     // Handle image selection
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
@@ -1093,6 +1410,38 @@ function SalesmanLeads() {
             ...prevCaptions.slice(index + 1),
             '',
         ]);
+    };
+
+    // Handle image replacement
+    const replaceImage = (index) => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                // Revoke old object URL
+                URL.revokeObjectURL(imagePreviews[index]);
+
+                // Update images array
+                setImages(prevImages => {
+                    const newImages = [...prevImages];
+                    newImages[index] = file;
+                    return newImages;
+                });
+
+                // Update previews array
+                const newPreview = URL.createObjectURL(file);
+                setImagePreviews(prevPreviews => {
+                    const newPreviews = [...prevPreviews];
+                    newPreviews[index] = newPreview;
+                    return newPreviews;
+                });
+
+                toast.success('Image replaced successfully!');
+            }
+        };
+        input.click();
     };
 
     // Handle caption changes
@@ -1247,6 +1596,74 @@ function SalesmanLeads() {
 
                     {/* Mobile Step Indicator */}
                     {renderStepIndicator()}
+
+                    {/* Camera Modal */}
+                    {showCamera && (
+                        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+                            <div className="bg-white rounded-lg w-full max-w-lg">
+                                <div className="p-4 border-b">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-lg font-semibold">Camera</h3>
+                                        <button
+                                            onClick={stopCamera}
+                                            className="text-gray-500 hover:text-gray-700"
+                                        >
+                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="p-4">
+                                    {isCameraActive ? (
+                                        <div className="relative">
+                                            <video
+                                                ref={videoRef}
+                                                autoPlay
+                                                playsInline
+                                                className="w-full h-64 object-cover rounded-lg bg-gray-200"
+                                            />
+                                            <div className="flex justify-center mt-4">
+                                                <button
+                                                    onClick={capturePhoto}
+                                                    className="w-16 h-16 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center text-white shadow-lg transition-colors"
+                                                >
+                                                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : capturedPhoto ? (
+                                        <div className="text-center">
+                                            <img
+                                                src={capturedPhoto}
+                                                alt="Captured"
+                                                className="w-full h-64 object-cover rounded-lg"
+                                            />
+                                            <div className="flex space-x-3 mt-4">
+                                                <button
+                                                    onClick={retakePhoto}
+                                                    className="flex-1 py-2 px-4 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors"
+                                                >
+                                                    Retake
+                                                </button>
+                                                <button
+                                                    onClick={confirmCapturedPhoto}
+                                                    className="flex-1 py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                                                >
+                                                    Use Photo
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : null}
+                                </div>
+                            </div>
+                            <canvas ref={canvasRef} style={{ display: 'none' }} />
+                        </div>
+                    )}
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="p-4 md:p-8">
@@ -1537,30 +1954,34 @@ function SalesmanLeads() {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Property Images (up to 4) *
                                 </label>
-                                <div className="flex items-center justify-center w-full">
-                                    <label
-                                        className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors"
+
+                                {/* Camera and Upload Options */}
+                                <div className="flex space-x-3 mb-4">
+                                    <button
+                                        type="button"
+                                        onClick={startCamera}
+                                        disabled={images.length >= 4}
+                                        className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors
+                                            ${images.length >= 4
+                                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                                : 'bg-blue-600 text-white hover:bg-blue-700 shadow-md'
+                                            }`}
                                     >
-                                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                            <svg
-                                                className="w-8 h-8 mb-1 text-gray-500"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                                                ></path>
-                                            </svg>
-                                            <p className="text-sm text-gray-500">
-                                                <span className="font-medium">Click to upload</span> or drag and drop
-                                            </p>
-                                            <p className="text-xs text-gray-500">(PNG, JPG, JPEG up to 10MB)</p>
-                                        </div>
+                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                        Take Photo
+                                    </button>
+                                    <label className={`flex items-center px-4 py-2 rounded-lg font-medium cursor-pointer transition-colors
+                                        ${images.length >= 4
+                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                            : 'bg-green-600 text-white hover:bg-green-700 shadow-md'
+                                        }`}>
+                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                        </svg>
+                                        Upload Files
                                         <input
                                             type="file"
                                             className="hidden"
@@ -1571,8 +1992,9 @@ function SalesmanLeads() {
                                         />
                                     </label>
                                 </div>
-                                <p className="text-xs text-gray-500 mt-1">
-                                    {images.length}/4 images uploaded
+
+                                <p className="text-xs text-gray-500">
+                                    {images.length}/4 images uploaded • PNG, JPG, JPEG up to 10MB each
                                 </p>
                             </div>
 
@@ -1589,26 +2011,42 @@ function SalesmanLeads() {
                                                 alt={`Preview ${index + 1}`}
                                                 className="w-full h-48 object-cover"
                                             />
-                                            <button
-                                                type="button"
-                                                onClick={() => removeImage(index)}
-                                                className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                                            >
-                                                <svg
-                                                    className="w-4 h-4"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                    xmlns="http://www.w3.org/2000/svg"
+
+                                            {/* Action buttons */}
+                                            <div className="absolute top-2 right-2 flex space-x-1">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => replaceImage(index)}
+                                                    className="bg-blue-500 text-white rounded-full p-1 hover:bg-blue-600 transition-colors"
+                                                    title="Replace Image"
                                                 >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth="2"
-                                                        d="M6 18L18 6M6 6l12 12"
-                                                    ></path>
-                                                </svg>
-                                            </button>
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                                    </svg>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeImage(index)}
+                                                    className="bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                                                    title="Remove Image"
+                                                >
+                                                    <svg
+                                                        className="w-4 h-4"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M6 18L18 6M6 6l12 12"
+                                                        ></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+
                                             <div className="p-3">
                                                 <input
                                                     type="text"
