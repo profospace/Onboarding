@@ -339,6 +339,9 @@ const SalesmanManagementPage = ({ user, onLogout }) => {
                                         Properties
                                     </th>
                                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Leads
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Actions
                                     </th>
                                 </tr>
@@ -388,6 +391,7 @@ const SalesmanManagementPage = ({ user, onLogout }) => {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {formatDate(salesman.joinDate)}
                                         </td>
+                                       
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm text-gray-900">
                                                 {salesman.properties?.length || 0} properties
@@ -397,6 +401,9 @@ const SalesmanManagementPage = ({ user, onLogout }) => {
                                                     {salesman.performanceMetrics.activeListings || 0} active listings
                                                 </div>
                                             )}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {salesman.salesLeads?.length || 0} active leads
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div className="flex space-x-2">
@@ -765,3 +772,4 @@ const SalesmanManagementPage = ({ user, onLogout }) => {
 };
 
 export default SalesmanManagementPage;
+

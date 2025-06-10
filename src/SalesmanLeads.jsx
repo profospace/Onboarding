@@ -2471,6 +2471,7 @@ function SalesmanLeads() {
             setImagePreviews([]);
             setCaptions(['', '', '', '']);
             setCurrentStep(1);
+            getCurrentLocation()
 
         } catch (error) {
             console.error('Submit error:', error);
