@@ -14,6 +14,6 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     host: true, // This allows access via your local IP
-    port: 5173, // Optional: customize port if needed
+    port: 5174, // Optional: customize port if needed
   },
 })
