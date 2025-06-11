@@ -38,8 +38,10 @@ const CameraCapture = ({ isOpen, onClose, onCapture }) => {
                 stream = await navigator.mediaDevices.getUserMedia({
                     video: {
                         facingMode: 'environment',
-                        width: { ideal: 1280, max: 1920 },
-                        height: { ideal: 720, max: 480 }
+                        width: { ideal: 1280, max: 1080 },
+                        height: { ideal: 720, max: 1080 }
+                        // width: { ideal: 1280, max: 1920 },
+                        // height: { ideal: 720, max: 1080 }
                     },
                     audio: false
                 });
