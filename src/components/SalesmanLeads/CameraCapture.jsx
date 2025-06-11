@@ -210,7 +210,7 @@ const CameraCapture = ({ isOpen, onClose, onCapture }) => {
                         autoPlay
                         playsInline
                         muted
-                        style={{ transform: 'scaleX(-1)' }}
+                        style={{ transform: 'none' }}
                     />
 
                     {!isVideoReady && !isLoading && !error && (
