@@ -492,7 +492,7 @@ const CameraCapture = ({ isOpen, onClose, onCapture }) => {
 
                     <video
                         ref={videoRef}
-                        className={`max-w-full max-h-full object-contain ${isVideoReady ? 'block' : 'hidden'}`}
+                        className={`max-w-full max-h-[90vh] object-contain ${isVideoReady ? 'block' : 'hidden'}`}
                         autoPlay
                         playsInline
                         muted
