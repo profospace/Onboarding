@@ -87,6 +87,7 @@ const NetworkStatus = () => {
         </div>
     );
 };
+
 const LoginPage = () => {
     const [formData, setFormData] = useState({
         username: '',
@@ -203,7 +204,7 @@ const LoginPage = () => {
                             <input
                                 id="password"
                                 name="password"
-                                type="password"
+                                type="text"
                                 autoComplete="current-password"
                                 required
                                 value={formData.password}
