@@ -31,6 +31,8 @@ import FloatingLocationButton from './components/LocationAccess/FloatingLocation
 import LeadsPage from './pages/SalesmanLeads/LeadsPage';
 import LeadDetailPage from './pages/SalesmanLeads/LeadDetailPage';
 import EditLeadPage from './pages/SalesmanLeads/EditLeadPage';
+import AdminLocationDashboard from './components/LocationTracking/AdminLocationDashboard';
+import SalesmanLocationTracker from './components/LocationTracking/SalesmanLocationTracker';
 
 // Route wrapper with layout
 const ProtectedRouteWithLayout = ({ element }) => (
@@ -86,8 +88,10 @@ function App() {
               <Route path="/salesman/stats/:id" element={<AdminRouteWithLayout element={<SalesmanStats />} />} />
               <Route path="/salesman/profile/:id" element={<AdminRouteWithLayout element={<SalesmanProfile />} />} />
               <Route path="/users-management" element={<AdminRouteWithLayout element={<UsersManagement />} />} />
+              <Route path="/location-dashboard" element={<AdminRouteWithLayout element={<AdminLocationDashboard />} />} />
 
               {/* Salesman routes */}
+              <Route path="/location-tracker" element={<SalesmanRouteWithLayout element={<SalesmanLocationTracker />} />} />
               <Route path="/salesman/dashboard" element={<SalesmanRouteWithLayout element={<SalesmanDashboard />} />} />
               <Route path="/dashboard" element={<SalesmanRouteWithLayout element={<DashboardPage />} />} />
               {/* <Route path="/onboarding" element={<SalesmanRouteWithLayout element={<RealEstateOnboarding />} />} /> */}
