@@ -16,4 +16,7 @@ export default defineConfig({
     host: true, // This allows access via your local IP
     port: 5174, // Optional: customize port if needed
   },
+  optimizeDeps: {
+    force: true,
+  }
 })

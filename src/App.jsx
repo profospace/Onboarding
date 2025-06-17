@@ -31,6 +31,8 @@ import FloatingLocationButton from './components/LocationAccess/FloatingLocation
 import LeadsPage from './pages/SalesmanLeads/LeadsPage';
 import LeadDetailPage from './pages/SalesmanLeads/LeadDetailPage';
 import EditLeadPage from './pages/SalesmanLeads/EditLeadPage';
+import LeadsMap from './pages/SalesmanLeads/LeadsMap';
+import SalesmanLeadsMap from './pages/SalesmanLeads/SalesmanLeadsMap';
 
 // Route wrapper with layout
 const ProtectedRouteWithLayout = ({ element }) => (
@@ -104,7 +106,8 @@ function App() {
               <Route path="/edit-lead/:id" element={<ProtectedRouteWithLayout element={<EditLeadPage />} />} />
 
 
-
+              <Route path="/leads-map" element={<LeadsMap />} />
+              <Route path="/leads-map-new/:salesmanId" element={<SalesmanLeadsMap />} />
 
 
               {/* Redirect to appropriate default page */}
