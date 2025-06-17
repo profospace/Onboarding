@@ -31,7 +31,6 @@ import FloatingLocationButton from './components/LocationAccess/FloatingLocation
 import LeadsPage from './pages/SalesmanLeads/LeadsPage';
 import LeadDetailPage from './pages/SalesmanLeads/LeadDetailPage';
 import EditLeadPage from './pages/SalesmanLeads/EditLeadPage';
-import LeadsMap from './pages/SalesmanLeads/LeadsMap';
 import SalesmanLeadsMap from './pages/SalesmanLeads/SalesmanLeadsMap';
 
 // Route wrapper with layout
@@ -88,6 +87,12 @@ function App() {
               <Route path="/salesman/stats/:id" element={<AdminRouteWithLayout element={<SalesmanStats />} />} />
               <Route path="/salesman/profile/:id" element={<AdminRouteWithLayout element={<SalesmanProfile />} />} />
               <Route path="/users-management" element={<AdminRouteWithLayout element={<UsersManagement />} />} />
+              <Route path="/users-management" element={<AdminRouteWithLayout element={<UsersManagement />} />} />
+              <Route path="/leads-map-new/:salesmanId" element={<SalesmanLeadsMap />} />
+
+              {/* <Route path="/leads-map-new/:salesmanId" element={<AdminRouteWithLayout element={<SalesmanLeadsMap />}/> } /> */}
+              
+
 
               {/* Salesman routes */}
               <Route path="/salesman/dashboard" element={<SalesmanRouteWithLayout element={<SalesmanDashboard />} />} />
@@ -106,8 +111,6 @@ function App() {
               <Route path="/edit-lead/:id" element={<ProtectedRouteWithLayout element={<EditLeadPage />} />} />
 
 
-              <Route path="/leads-map" element={<LeadsMap />} />
-              <Route path="/leads-map-new/:salesmanId" element={<SalesmanLeadsMap />} />
 
 
               {/* Redirect to appropriate default page */}
