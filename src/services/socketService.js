@@ -654,6 +654,7 @@
 // export default new SocketService();
 
 import { io } from 'socket.io-client';
+import { base_url } from '../../utils/base_url';
 
 class SocketService {
     constructor() {
@@ -672,11 +673,11 @@ class SocketService {
         }
 
         this.userRole = userRole;
-        const serverUrl = 'http://localhost:5029';
+        // const serverUrl = import.meta.env.VITE_BASE_URL;
 
         console.log('Connecting to socket with role:', userRole);
 
-        this.socket = io(`${serverUrl}/location`, {
+        this.socket = io(`${base_url}/location`, {
             auth: {
                 token: token
             },

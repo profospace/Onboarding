@@ -165,13 +165,12 @@
 // export default new LocationService();
 
 import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:5029';
+import { base_url } from '../../utils/base_url';
 
 class LocationService {
     constructor() {
         this.apiClient = axios.create({
-            baseURL: `${API_BASE_URL}/api/location`,
+            baseURL: `${base_url}/api/location`,
             timeout: 10000
         });
 

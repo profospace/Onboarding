@@ -85,6 +85,7 @@ const AppLayout = ({ children }) => {
         if (path === '/settings') return ['settings'];
         if (path === '/sales-leads') return ['sales-leads'];
         if (path === '/leads') return ['leads'];
+        if (path === '/location-dashboard') return ['location-dashboard'];
         return ['dashboard'];
     };
 
@@ -129,6 +130,11 @@ const AppLayout = ({ children }) => {
             key: 'users',
             icon: <BankOutlined />,
             label: <Link to="/users-management">Users Management</Link>,
+        },
+        {
+            key: 'location-dashboard',
+            icon: <BankOutlined />,
+            label: <Link to="/location-dashboard">Location Tracking</Link>,
         },
         {
             key: 'settings',
