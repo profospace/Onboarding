@@ -32,6 +32,9 @@ import LeadsPage from './pages/SalesmanLeads/LeadsPage';
 import LeadDetailPage from './pages/SalesmanLeads/LeadDetailPage';
 import EditLeadPage from './pages/SalesmanLeads/EditLeadPage';
 import SalesmanLeadsMap from './pages/SalesmanLeads/SalesmanLeadsMap';
+import AdminLocationDashboard from './components/LocationTracking/AdminLocationDashboard';
+import SalesmanLocationTracker from './components/LocationTracking/SalesmanLocationTracker';
+import useGlobalLocationTracking from './hooks/useGlobalLocationTracking';
 
 // Route wrapper with layout
 const ProtectedRouteWithLayout = ({ element }) => (
@@ -75,6 +78,38 @@ function App() {
         >
           <Toaster position="top-center" />
           <FloatingLocationButton />
+
+          {/* Global tracking status indicator (only for salesman) */}
+          {
+            trackingState.isInitialized && (
+              <div className="fixed bottom-4 left-4 z-50">
+                <div className={`px-3 py-2 rounded-full text-xs font-medium ${trackingState.isTracking
+                  ? 'bg-green-100 text-green-800'
+                  : trackingState.trackingSettings?.trackingEnabled
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-gray-100 text-gray-800'
+                  }`}>
+                  {trackingState.isTracking ? (
+                    <span className="flex items-center gap-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      {/* Tracking Active */}
+                    </span>
+                  ) : trackingState.trackingSettings?.trackingEnabled ? (
+                    <span className="flex items-center gap-1">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                      {/* Tracking Ready */}
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1">
+                      <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                      {/* Tracking Disabled */}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )
+          }
+
           <Router>
             <Routes>
               {/* Public routes */}
@@ -88,6 +123,7 @@ function App() {
               <Route path="/salesman/profile/:id" element={<AdminRouteWithLayout element={<SalesmanProfile />} />} />
               <Route path="/users-management" element={<AdminRouteWithLayout element={<UsersManagement />} />} />
               <Route path="/users-management" element={<AdminRouteWithLayout element={<UsersManagement />} />} />
+              <Route path="/location-dashboard" element={<AdminRouteWithLayout element={<AdminLocationDashboard />} />} />
               <Route path="/leads-map-new/:salesmanId" element={<SalesmanLeadsMap />} />
 
               {/* <Route path="/leads-map-new/:salesmanId" element={<AdminRouteWithLayout element={<SalesmanLeadsMap />}/> } /> */}
@@ -98,6 +134,8 @@ function App() {
               <Route path="/salesman/dashboard" element={<SalesmanRouteWithLayout element={<SalesmanDashboard />} />} />
               <Route path="/dashboard" element={<SalesmanRouteWithLayout element={<DashboardPage />} />} />
               {/* <Route path="/onboarding" element={<SalesmanRouteWithLayout element={<RealEstateOnboarding />} />} /> */}
+              <Route path="/location-tracker" element={<SalesmanRouteWithLayout element={<SalesmanLocationTracker />} />} />
+
 
               {/* Protected routes (both admin and salesman) */}
               <Route path="/sales-leads" element={<ProtectedRouteWithLayout element={<SalesmanLeads />} />} />
