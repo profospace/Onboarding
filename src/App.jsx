@@ -64,6 +64,8 @@ const SalesmanRouteWithLayout = ({ element }) => (
 );
 
 function App() {
+  // Initialize global location tracking
+  const trackingState = useGlobalLocationTracking();
   
   return (
     <>
