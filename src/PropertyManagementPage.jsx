@@ -936,12 +936,12 @@ const PropertyManagementPage = ({ user, onLogout }) => {
                                         </td>
                                         <td className="px-4 py-4 whitespace-nowrap text-sm font-medium">
                                             <div className="flex space-x-2">
-                                                {/* <button
-                                                    onClick={() => navigate(`/onboarding`, { state: { salesman: property } })}
+                                                <button
+                                                    onClick={() => navigate(`/property-edit/${property?.post_id}`)}
                                                     className="text-green-600 hover:text-blue-900"
                                                 >
                                                     Edit
-                                                </button> */}
+                                                </button>
                                                 <button
                                                     onClick={() => navigate(`/salesman/profile/${property.salesman._id}`, { state: { salesman: property.salesman } })}
                                                     className="text-red-600 hover:text-blue-900"

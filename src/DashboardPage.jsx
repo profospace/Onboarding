@@ -80,7 +80,7 @@ const DashboardPage = () => {
     // Handle property edit
     const handleEditProperty = () => {
         // alert(`Edit property ${selectedPropertyId}`);
-        navigate(`/edit/${selectedPropertyId}`)
+        navigate(`/property-edit/${selectedPropertyId}`)
         setActiveMenu(null);
     };
 
