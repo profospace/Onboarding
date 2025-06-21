@@ -5,12 +5,48 @@ import { Steps } from 'antd';
 import AutofillOptions from './AutofillOptions';
 import { toast } from 'react-hot-toast';
 import { base_url } from '../utils/base_url';
+import axios from 'axios';
+
+import { Select, Form } from 'antd';
+const { Option } = Select;
+
 
 const RealEstateOnboarding = ({ user }) => {
     const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const location = useLocation();
+
+    const [salesmanList, setSalesmanList] = useState([]);
+    const [selectedSalesman ,setSelectedSalesman] = useState('')
+    const [form] = Form.useForm();
+
+    console.log("selectedSalesman", selectedSalesman)
+
+    // Get user token from localStorage
+    const details = JSON.parse(localStorage.getItem('user'));
+
+    // get all salesman
+    const getAllSalesman = async () => {
+        try {
+            const response = await axios.get(`${base_url}/api/adminSales/all-salesman-no-limit`, {
+                headers: { Authorization: `Bearer ${details?.token}` }
+            });
+            setSalesmanList(response.data.data);
+        } catch (error) {
+            console.error("Error fetching salesman:", error);
+        }
+    };
+
+    useEffect(() => {
+        getAllSalesman();
+    }, []);
+
+    const handleFormSubmit = (values) => {
+        console.log('Form values:', values);
+        console.log('Selected salesman ID:', values.salesman);
+    };
+
 
 
     // Modify the form initialization in the useEffect or where you initialize formData
@@ -695,6 +731,7 @@ const RealEstateOnboarding = ({ user }) => {
                     priceUnit: '',
                     areaUnit: ''
                 },
+                // assignToSalesman : selectedSalesman
             };
 
             if (user && user.id) {
@@ -801,7 +838,7 @@ const RealEstateOnboarding = ({ user }) => {
                     />
                 </div>
                 {/* Navigation buttons */}
-                <div className="flex justify-between my-2">
+                <div className="flex justify-between my-2 items-center">
                     {currentStep > 1 ? (
                         <button
                             type="button"
@@ -816,6 +853,37 @@ const RealEstateOnboarding = ({ user }) => {
                     ) : (
                         <div></div>
                     )}
+
+                    <Form.Item
+                        label="Select Salesman"
+                        name="salesman"
+                        rules={[{ required: true, message: 'Please select a salesman!' }]}
+                    >
+                        <Select
+                            showSearch
+                            placeholder="Search and select a salesman"
+                            onChange={(value) => {
+                                setSelectedSalesman(value); // Save selected ID
+                            }}
+                            // filterOption={(input, option) =>
+                            //     option.children.toLowerCase().includes(input.toLowerCase())
+                            // }
+                            filterOption={(input, option) => {
+                                const searchText = input.toLowerCase();
+                                return (
+                                    option.key.toLowerCase().includes(searchText) ||
+                                    (option.email && option.email.toLowerCase().includes(searchText)) ||
+                                    (option.phone && option.phone.includes(input))
+                                );
+                            }}
+                        >
+                            {salesmanList.map((salesman) => (
+                                <Option key={salesman._id} value={salesman._id}>
+                                    {salesman.name} - {salesman.email}
+                                </Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
 
                     {currentStep < 7 ? (
                         <button
