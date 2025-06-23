@@ -128,7 +128,6 @@ function App() {
               <Route path="/users-management" element={<AdminRouteWithLayout element={<UsersManagement />} />} />
               <Route path="/users-management" element={<AdminRouteWithLayout element={<UsersManagement />} />} />
               <Route path="/location-dashboard" element={<AdminRouteWithLayout element={<AdminLocationDashboard />} />} />
-              <Route path="/leads-map-new/:salesmanId" element={<SalesmanLeadsMap />} />
 
               {/* <Route path="/leads-map-new/:salesmanId" element={<AdminRouteWithLayout element={<SalesmanLeadsMap />}/> } /> */}
               
@@ -154,6 +153,7 @@ function App() {
               <Route path="/lead/:id" element={<ProtectedRouteWithLayout element={<LeadDetailPage />} />} />
               <Route path="/edit-lead/:id" element={<ProtectedRouteWithLayout element={<EditLeadPage />} />} />
 
+              <Route path="/leads-map-new/:salesmanId" element={<SalesmanLeadsMap />} />
 
 
 

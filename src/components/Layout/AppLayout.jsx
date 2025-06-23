@@ -44,6 +44,8 @@ const AppLayout = ({ children }) => {
     const location = useLocation();
     const { user } = useSelector((state) => state.auth);
 
+    // console.log("user", user)
+
     const [collapsed, setCollapsed] = useState(false);
     const [mobileView, setMobileView] = useState(window.innerWidth < 768);
     const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
@@ -86,6 +88,7 @@ const AppLayout = ({ children }) => {
         if (path === '/sales-leads') return ['sales-leads'];
         if (path === '/leads') return ['leads'];
         if (path === '/location-dashboard') return ['location-dashboard'];
+        if (path === `/leads-map-new/${user?._id}`) return ['leads-map-new'];
         return ['dashboard'];
     };
 
@@ -171,6 +174,12 @@ const AppLayout = ({ children }) => {
             icon: <SiGoogleadsense />,
             label: <Link to="/sales-leads">Create Leads</Link>,
         },
+        {
+            key: 'leads-map-new',
+            icon: <SiGoogleadsense />,
+            label: <Link to={`/leads-map-new/${user?._id}`}>My Leads Map</Link>,
+        },
+
         {
             key: 'draft',
             icon: <BankOutlined />,
