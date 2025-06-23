@@ -396,16 +396,6 @@ const SalesmanLeadsMap = () => {
                         };
 
                         // Create unique marker icon for salesman's location
-                        // const salesmanMarkerIcon = {
-                        //     path: 'M 0,0 m -8,0 a 8,8 0 1,0 16,0 a 8,8 0 1,0 -16,0',
-                        //     fillColor: 'red', // Orange color for salesman
-                        //     fillOpacity: 1,
-                        //     strokeColor: '#FFFFFF',
-                        //     strokeWeight: 3,
-                        //     scale: 1.5,
-                        //     anchor: new window.google.maps.Point(0, 0)
-                        // };
-
                         const salesmanMarkerIcon = {
                             path: 'M12,2C8.13,2 5,5.13 5,9c0,5.25 7,13 7,13s7,-7.75 7,-13C19,5.13 15.87,2 12,2zM12,11.5c-1.38,0 -2.5,-1.12 -2.5,-2.5s1.12,-2.5 2.5,-2.5s2.5,1.12 2.5,2.5S13.38,11.5 12,11.5z',
                             fillColor: '#EA4335', // Google's red color
@@ -426,6 +416,21 @@ const SalesmanLeadsMap = () => {
                         });
 
                         // Add click listener for salesman marker
+                        // salesmanMarker.addListener('click', () => {
+                        //     const salesmanInfoContent = `
+                        //         <div style="padding: 10px; max-width: 200px;">
+                        //             <h3 style="margin: 0 0 5px 0; color: #FF6B35;">📍 Your Location</h3>
+                        //             <p style="margin: 0; font-size: 14px; color: #666;">
+                        //                 Current Position<br>
+                        //                 <small>Lat: ${salesmanPosition.lat.toFixed(6)}<br>
+                        //                 Lng: ${salesmanPosition.lng.toFixed(6)}</small>
+                        //             </p>
+                        //         </div>
+                        //     `;
+                        //     infoWindowRef.current.setContent(salesmanInfoContent);
+                        //     infoWindowRef.current.open(googleMapRef.current, salesmanMarker);
+                        // });
+
                         salesmanMarker.addListener('click', () => {
                             const salesmanInfoContent = `
                                 <div style="padding: 10px; max-width: 200px;">
@@ -439,6 +444,10 @@ const SalesmanLeadsMap = () => {
                             `;
                             infoWindowRef.current.setContent(salesmanInfoContent);
                             infoWindowRef.current.open(googleMapRef.current, salesmanMarker);
+
+                            // Auto-zoom to salesman location
+                            googleMapRef.current.setCenter(salesmanPosition);
+                            googleMapRef.current.setZoom(16);
                         });
 
                         markersRef.current.push(salesmanMarker);
@@ -525,10 +534,24 @@ const SalesmanLeadsMap = () => {
                 });
 
                 // Add click listener to marker
+                // marker.addListener('click', () => {
+                //     const contentString = createInfoWindowContent(lead, index + 1);
+                //     infoWindowRef.current.setContent(contentString);
+                //     infoWindowRef.current.open(googleMapRef.current, marker);
+                // });
+
                 marker.addListener('click', () => {
+                    // Create and show info window
                     const contentString = createInfoWindowContent(lead, index + 1);
                     infoWindowRef.current.setContent(contentString);
                     infoWindowRef.current.open(googleMapRef.current, marker);
+
+                    // Auto-zoom to marker location
+                    googleMapRef.current.setCenter(position);
+                    googleMapRef.current.setZoom(16); // Adjust zoom level as needed (higher = more zoomed in)
+
+                // Optional: Smooth pan to location instead of instant center
+                // googleMapRef.current.panTo(position);
                 });
 
                 markersRef.current.push(marker);
