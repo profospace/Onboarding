@@ -1363,6 +1363,37 @@ const RealEstateOnboarding = ({ user }) => {
                                                 <option value="acres">acres</option>
                                             </select>
                                         </div>
+
+                                        <div className='my-2'>
+                                            <label htmlFor="carpetArea" className="block text-sm font-medium text-gray-700 mb-1">
+                                                Carpet Area
+                                            </label>
+                                            <input
+                                                type="number"
+                                                id="carpetArea"
+                                                name="carpetArea"
+                                                value={formData.carpetArea}
+                                                onChange={handleChange}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                                placeholder="Carpet Area"
+                                            />
+                                        </div>
+
+                                        <div className='my-2'>
+                                            <label htmlFor="superBuiltupArea" className="block text-sm font-medium text-gray-700 mb-1">
+                                                Super Built-up Area
+                                            </label>
+                                            <input
+                                                type="number"
+                                                id="superBuiltupArea"
+                                                name="superBuiltupArea"
+                                                value={formData.superBuiltupArea}
+                                                onChange={handleChange}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                                placeholder="Super Built-up Area"
+                                            />
+                                        </div>
+
                                     </div>
 
                                     <div>
@@ -1806,7 +1837,7 @@ const RealEstateOnboarding = ({ user }) => {
                             <h2 className="text-lg font-medium text-gray-900 mb-6">Additional Property Features</h2>
 
                             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                                <div>
+                                {/* <div>
                                     <label htmlFor="carpetArea" className="block text-sm font-medium text-gray-700 mb-1">
                                         Carpet Area
                                     </label>
@@ -1834,7 +1865,7 @@ const RealEstateOnboarding = ({ user }) => {
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                         placeholder="Super Built-up Area"
                                     />
-                                </div>
+                                </div> */}
 
                                 <div>
                                     <label htmlFor="flooring" className="block text-sm font-medium text-gray-700 mb-1">
