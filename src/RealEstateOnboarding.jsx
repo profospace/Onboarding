@@ -854,36 +854,38 @@ const RealEstateOnboarding = ({ user }) => {
                         <div></div>
                     )}
 
-                    <Form.Item
-                        label="Select Salesman"
-                        name="salesman"
-                        rules={[{ required: true, message: 'Please select a salesman!' }]}
-                    >
-                        <Select
-                            showSearch
-                            placeholder="Search and select a salesman"
-                            onChange={(value) => {
-                                setSelectedSalesman(value); // Save selected ID
-                            }}
-                            // filterOption={(input, option) =>
-                            //     option.children.toLowerCase().includes(input.toLowerCase())
-                            // }
-                            filterOption={(input, option) => {
-                                const searchText = input.toLowerCase();
-                                return (
-                                    option.key.toLowerCase().includes(searchText) ||
-                                    (option.email && option.email.toLowerCase().includes(searchText)) ||
-                                    (option.phone && option.phone.includes(input))
-                                );
-                            }}
+                    {
+                        details?.role === 'admin' && <Form.Item
+                            label="Select Salesman"
+                            name="salesman"
+                            rules={[{ message: 'Please select a salesman!' }]}
                         >
-                            {salesmanList.map((salesman) => (
-                                <Option key={salesman._id} value={salesman._id}>
-                                    {salesman.name} - {salesman.email}
-                                </Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
+                            <Select
+                                showSearch
+                                placeholder="Search and select a salesman"
+                                onChange={(value) => {
+                                    setSelectedSalesman(value); // Save selected ID
+                                }}
+                                // filterOption={(input, option) =>
+                                //     option.children.toLowerCase().includes(input.toLowerCase())
+                                // }
+                                filterOption={(input, option) => {
+                                    const searchText = input.toLowerCase();
+                                    return (
+                                        option.key.toLowerCase().includes(searchText) ||
+                                        (option.email && option.email.toLowerCase().includes(searchText)) ||
+                                        (option.phone && option.phone.includes(input))
+                                    );
+                                }}
+                            >
+                                {salesmanList.map((salesman) => (
+                                    <Option key={salesman._id} value={salesman._id}>
+                                        {salesman.name} - {salesman.email}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    }
 
                     {currentStep < 7 ? (
                         <button

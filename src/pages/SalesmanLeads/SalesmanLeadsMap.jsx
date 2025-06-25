@@ -548,7 +548,7 @@ const SalesmanLeadsMap = () => {
 
                     // Auto-zoom to marker location
                     googleMapRef.current.setCenter(position);
-                    googleMapRef.current.setZoom(16); // Adjust zoom level as needed (higher = more zoomed in)
+                    googleMapRef.current.setZoom(18); // Adjust zoom level as needed (higher = more zoomed in)
 
                 // Optional: Smooth pan to location instead of instant center
                 // googleMapRef.current.panTo(position);
