@@ -11,7 +11,7 @@ const PropertyManagementPage = ({ user, onLogout }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    console.log("properties", properties)
+    // console.log("properties", properties)
 
     // State for statistics
     const [stats, setStats] = useState({
@@ -62,6 +62,7 @@ const PropertyManagementPage = ({ user, onLogout }) => {
     const [selectedProperties, setSelectedProperties] = useState([]);
     const [bulkAction, setBulkAction] = useState('');
     const [selectAll, setSelectAll] = useState(false);
+
 
     const navigate = useNavigate()
 
