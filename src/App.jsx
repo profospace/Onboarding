@@ -36,6 +36,7 @@ import AdminLocationDashboard from './components/LocationTracking/AdminLocationD
 import SalesmanLocationTracker from './components/LocationTracking/SalesmanLocationTracker';
 import useGlobalLocationTracking from './hooks/useGlobalLocationTracking';
 import PropertyEdit from './PropertyEdit';
+import LeadsManagementPage from './pages/LeadsManagement/LeadsManagementPage';
 
 // Route wrapper with layout
 const ProtectedRouteWithLayout = ({ element }) => (
@@ -154,6 +155,7 @@ function App() {
               <Route path="/edit-lead/:id" element={<ProtectedRouteWithLayout element={<EditLeadPage />} />} />
 
               <Route path="/leads-map-new/:salesmanId" element={<SalesmanLeadsMap />} />
+              <Route path="/web-leads" element={<ProtectedRouteWithLayout element={<LeadsManagementPage />} />} />  {/* Leads From Website Page  */}
 
 
 

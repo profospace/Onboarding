@@ -120,6 +120,11 @@ const AppLayout = ({ children }) => {
             label: <Link to="/sales-leads">Create Leads</Link>,
         },
         {
+            key: 'web-leads',
+            icon: <SiGoogleadsense />,
+            label: <Link to="/web-leads">Web Leads</Link>,
+        },
+        {
             key: 'add-property',
             icon: <PlusOutlined />,
             label: <Link to="/onboarding">Add Property</Link>,
@@ -173,6 +178,11 @@ const AppLayout = ({ children }) => {
             key: 'sales-leads',
             icon: <SiGoogleadsense />,
             label: <Link to="/sales-leads">Create Leads</Link>,
+        },
+        {
+            key: 'web-leads',
+            icon: <SiGoogleadsense />,
+            label: <Link to="/web-leads">Web Leads</Link>,
         },
         {
             key: 'leads-map-new',
