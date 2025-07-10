@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import LoadingSpinner from '../../components/SalesmanLeads/LoadingSpinner';
-import LeadImages from '../../components/SalesmanLeads/LeadImages';
-import LeadDetailsSection from '../../components/SalesmanLeads/LeadDetailsSection';
-import MapSection from '../../components/SalesmanLeads/MapSection';
-import DeleteModal from '../../components/SalesmanLeads/DeleteModal';
-import { ArrowLeftIcon, PencilIcon, TrashIcon } from '../../components/SalesmanLeads/Icons';
+import LoadingSpinner from '../../components/SalesmanCommercialLeads/LoadingSpinner';
+import LeadImages from '../../components/SalesmanCommercialLeads/LeadImages';
+import LeadDetailsSection from '../../components/SalesmanCommercialLeads/LeadDetailsSection';
+import MapSection from '../../components/SalesmanCommercialLeads/MapSection';
+import DeleteModal from '../../components/SalesmanCommercialLeads/DeleteModal';
+import { ArrowLeftIcon, PencilIcon, TrashIcon } from '../../components/SalesmanCommercialLeads/Icons';
 
-import { deleteLead } from '../../services/leadService';
-import { fetchLeadById } from '../../services/leadService';
+import { deleteLead } from '../../services/commercialLeadService';
+import { fetchLeadById } from '../../services/commercialLeadService';
 
-const LeadDetailPage = () => {
+const CommercialLeadDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [lead, setLead] = useState(null);
@@ -130,4 +130,4 @@ const LeadDetailPage = () => {
     );
 };
 
-export default LeadDetailPage;
+export default CommercialLeadDetailPage;

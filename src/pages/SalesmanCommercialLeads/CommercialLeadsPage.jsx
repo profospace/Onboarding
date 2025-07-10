@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import LeadsList from '../../components/SalesmanLeads/LeadsList';
-import SearchBar from '../../components/SalesmanLeads/SearchBar';
-import FilterBar from '../../components/SalesmanLeads/FilterBar';
-import Pagination from '../../components/SalesmanLeads/Pagination';
-import DeleteModal from '../../components/SalesmanLeads/DeleteModal';
-import LoadingSpinner from '../../components/SalesmanLeads/LoadingSpinner';
-import NoResultsFound from '../../components/SalesmanLeads/NoResultsFound';
-import { MapPinIcon } from '../../components/SalesmanLeads/Icons';
-import { fetchLeads, deleteLead } from '../../services/leadService';
+import LeadsList from '../../components/SalesmanCommercialLeads/LeadsList';
+import SearchBar from '../../components/SalesmanCommercialLeads/SearchBar';
+import FilterBar from '../../components/SalesmanCommercialLeads/FilterBar';
+import Pagination from '../../components/SalesmanCommercialLeads/Pagination';
+import DeleteModal from '../../components/SalesmanCommercialLeads/DeleteModal';
+import LoadingSpinner from '../../components/SalesmanCommercialLeads/LoadingSpinner';
+import NoResultsFound from '../../components/SalesmanCommercialLeads/NoResultsFound';
+import { MapPinIcon } from '../../components/SalesmanCommercialLeads/Icons';
+import { fetchLeads, deleteLead } from '../../services/commercialLeadService';
 
-const LeadsPage = () => {
+const CommercialLeadsPage = () => {
     const [leads, setLeads] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -106,16 +106,16 @@ const LeadsPage = () => {
     return (
         <div className="min-h-screen bg-white">
             {/* Header */}
-            <header className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+            <header className="bg-gradient-to-r from-[crimson] to-indigo-700 text-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                         <div className="flex items-center">
                             <MapPinIcon className="w-8 h-8 mr-3" />
-                            <h1 className="text-2xl md:text-3xl font-bold">Property Leads</h1>
+                            <h1 className="text-2xl md:text-3xl font-bold">Commercial Leads</h1>
                         </div>
                         <div className="mt-4 md:mt-0">
                             <button
-                                onClick={() => window.location.href = '/sales-leads'}
+                                onClick={() => window.location.href = '/sales-commercial-leads'}
                                 className="px-4 py-2 bg-white text-blue-600 rounded-lg font-medium shadow-md hover:bg-blue-50 transition-colors flex items-center"
                             >
                                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -174,4 +174,4 @@ const LeadsPage = () => {
     );
 };
 
-export default LeadsPage;
+export default CommercialLeadsPage;

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { base_url } from '../../utils/base_url';
 
 // Base URL from environment variable
-const BASE_URL = `${base_url}/api/salesman/property/leads`;
+const BASE_URL = `${base_url}/api/salesman/commercial/leads`;
 
 // Helper to get auth token
 const getToken = () => {

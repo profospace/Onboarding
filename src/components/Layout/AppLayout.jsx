@@ -121,6 +121,11 @@ const AppLayout = ({ children }) => {
             label: <Link to="/sales-leads">Create Leads</Link>,
         },
         {
+            key: 'commercial-leads',
+            icon: <SiGoogleadsense />,
+            label: <Link to="/commercial-leads">All Commercial Leads</Link>,
+        },
+        {
             key: 'sales-commercial-leads',
             icon: <SiGoogleadsense />,
             label: <Link to="/sales-commercial-leads">Create Commercial Leads</Link>,
@@ -184,6 +189,11 @@ const AppLayout = ({ children }) => {
             key: 'sales-leads',
             icon: <SiGoogleadsense />,
             label: <Link to="/sales-leads">Create Leads</Link>,
+        },
+        {
+            key: 'commercial-leads',
+            icon: <SiGoogleadsense />,
+            label: <Link to="/commercial-leads">All Commercial Leads</Link>,
         },
         {
             key: 'sales-commercial-leads',
