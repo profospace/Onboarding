@@ -9,12 +9,8 @@ import ImageUploader from '../../components/SalesmanLeads/ImageUploader';
 import CameraCapture from '../../components/SalesmanLeads/CameraCapture';
 import { base_url } from '../../../utils/base_url';
 
-// Mock for router when no actual router is available
-const useParamsMock = () => {
-    return {
-        id: '123'
-    };
-};
+import { Select, Input, Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 
 const useNavigateMock = () => {
     return (path) => {
@@ -36,12 +32,64 @@ const CommercialEditLeadPage = () => {
     const [formData, setFormData] = useState({
         propertyName: '',
         ownerName: '',
+        type: '',
         ownerContact: '',
         location: {
             latitude: 0,
             longitude: 0
         }
     });
+
+
+    // Add these state variables
+    const [propertyTypeOptions, setPropertyTypeOptions] = useState([
+        'Bank',
+        'ATM',
+        'Medical Store',
+        'Office Space',
+        'Retail Shop',
+        'Supermarket',
+        'Warehouse',
+        'Restaurant',
+        'Café',
+        'Clinic',
+        'Showroom',
+        'Salon',
+        'Gym',
+        'Coworking Space',
+        'Service Center',
+        'Hotel',
+        'Guest House',
+        'Theater',
+        'Petrol Pump',
+        'Studio',
+        'Cloud Kitchen',
+        'Bar',
+        'Pharmacy',
+        'Bakery',
+        'Training Center',
+        'Daycare Center',
+        'Diagnostic Lab',
+        'Courier Center',
+    ]);
+
+    const [newPropertyType, setNewPropertyType] = useState('');
+    const [isAddingNewType, setIsAddingNewType] = useState(false);
+
+    // Add these functions
+    const handleAddNewPropertyType = () => {
+        if (newPropertyType.trim() && !propertyTypeOptions.includes(newPropertyType.trim())) {
+            setPropertyTypeOptions([...propertyTypeOptions, newPropertyType.trim()]);
+            setFormData({ ...formData, type: newPropertyType.trim() });
+            setNewPropertyType('');
+            setIsAddingNewType(false);
+        }
+    };
+
+    const handleCancelAddNewType = () => {
+        setNewPropertyType('');
+        setIsAddingNewType(false);
+    };
 
     // Enhanced image state
     const [imageData, setImageData] = useState({
@@ -75,6 +123,7 @@ const CommercialEditLeadPage = () => {
 
                 setFormData({
                     propertyName: leadData.propertyName || '',
+                    type: leadData.type || '',
                     ownerName: leadData.ownerName || '',
                     ownerContact: leadData.ownerContact || '',
                     location: leadData.location || { latitude: 0, longitude: 0 }
@@ -255,6 +304,7 @@ const CommercialEditLeadPage = () => {
 
                 // Add basic fields
                 leadFormData.append('propertyName', formData.propertyName);
+                leadFormData.append('type', formData.type);
                 leadFormData.append('ownerName', formData.ownerName);
                 leadFormData.append('ownerContact', formData.ownerContact);
 
@@ -305,6 +355,7 @@ const CommercialEditLeadPage = () => {
                     `${base_url}/api/salesman/commercial/leads/${id}`,
                     {
                         propertyName: formData.propertyName,
+                        type: formData.type,
                         ownerName: formData.ownerName,
                         ownerContact: formData.ownerContact,
                         location: formData.location
@@ -371,6 +422,70 @@ const CommercialEditLeadPage = () => {
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="E.g., Sunset Villa, Business Park Tower"
                             />
+                        </div>
+
+                        {/* {type} */}
+                        {/* type*/}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Property Type
+                            </label>
+                            <Select
+                                value={formData.type}
+                                onChange={(value) => setFormData({ ...formData, type: value })}
+                                placeholder="Select or add property type"
+                                className="w-full"
+                                style={{ height: '42px' }}
+                                showSearch
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                                dropdownRender={(menu) => (
+                                    <>
+                                        {menu}
+                                        <div style={{ padding: '8px 0' }}>
+                                            <div style={{ display: 'flex', flexWrap: 'nowrap', padding: '0 8px' }}>
+                                                {!isAddingNewType ? (
+                                                    <Button
+                                                        type="dashed"
+                                                        icon={<PlusOutlined />}
+                                                        onClick={() => setIsAddingNewType(true)}
+                                                        style={{ width: '100%' }}
+                                                    >
+                                                        Add new type
+                                                    </Button>
+                                                ) : (
+                                                    <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+                                                        <Input
+                                                            placeholder="Enter new type"
+                                                            value={newPropertyType}
+                                                            onChange={(e) => setNewPropertyType(e.target.value)}
+                                                            onPressEnter={handleAddNewPropertyType}
+                                                            style={{ flex: 1 }}
+                                                        />
+                                                        <Button
+                                                            type="primary"
+                                                            onClick={handleAddNewPropertyType}
+                                                            disabled={!newPropertyType.trim()}
+                                                        >
+                                                            Add
+                                                        </Button>
+                                                        <Button onClick={handleCancelAddNewType}>
+                                                            Cancel
+                                                        </Button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+                            >
+                                {propertyTypeOptions.map(option => (
+                                    <Select.Option key={option} value={option}>
+                                        {option}
+                                    </Select.Option>
+                                ))}
+                            </Select>
                         </div>
 
                         <div>

@@ -297,7 +297,7 @@ import { Button } from 'antd';
 import { base_url } from '../../../utils/base_url';
 
 const LeadCard = ({ lead, onDeleteClick, onUpdateLead }) => {
-    const { _id, propertyName, ownerName, ownerContact, images, createdAt, isCrossed } = lead;
+    const { _id, propertyName, ownerName,type, ownerContact, images, createdAt, isCrossed } = lead;
     const { user } = useSelector((state) => state.auth);
     const featuredImage = images && images.length > 0
         ? images[0].url
@@ -381,7 +381,7 @@ const LeadCard = ({ lead, onDeleteClick, onUpdateLead }) => {
             <div className='flex-1 p-3'>
                 <div className="mb-3">
                     <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1 leading-tight">
-                        {propertyName || "Untitled Property"}
+                        {propertyName || "Untitled Property"} - {type}
                     </h3>
 
                     <div className='flex justify-between'>

@@ -66,7 +66,7 @@ const CommercialLeadDetailPage = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
-            <header className="bg-gradient-to-r from-[crimson] to-indigo-700 text-white">
+            <header className="bg-gradient-to-r from-[crimson] to-indigo-700 ">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                         <div>

@@ -4,6 +4,7 @@ import { formatDate } from '../../../utils/formatters';
 const LeadDetailsSection = ({ lead }) => {
     const {
         propertyName,
+        type,
         ownerName,
         ownerContact,
         location,
@@ -23,6 +24,10 @@ const LeadDetailsSection = ({ lead }) => {
                     <div>
                         <h3 className="text-sm font-medium text-gray-500">Property Name</h3>
                         <p className="mt-1 text-base text-gray-900">{propertyName || 'Not specified'}</p>
+                    </div>
+                    <div>
+                        <h3 className="text-sm font-medium text-gray-500">Property Type</h3>
+                        <p className="mt-1 text-base text-gray-900">{type || 'Not specified'}</p>
                     </div>
 
                     <div>

@@ -106,10 +106,10 @@ const CommercialLeadsPage = () => {
     return (
         <div className="min-h-screen bg-white">
             {/* Header */}
-            <header className="bg-gradient-to-r from-[crimson] to-indigo-700 text-white">
+            <header className="bg-gradient-to-r from-[crimson] to-indigo-700 ">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                        <div className="flex items-center">
+                        <div className="flex items-center text-white">
                             <MapPinIcon className="w-8 h-8 mr-3" />
                             <h1 className="text-2xl md:text-3xl font-bold">Commercial Leads</h1>
                         </div>

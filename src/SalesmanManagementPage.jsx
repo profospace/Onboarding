@@ -1170,11 +1170,11 @@ const SalesmanManagementPage = ({ user, onLogout }) => {
                                                 </span>
                                             </div>
                                         </td>
-                                        <td className="px-0 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {formatDate(salesman.joinDate)}
                                         </td>
 
-                                        <td className="px-0 py-4 whitespace-nowrap">
+                                        <td className="px-2 py-4 whitespace-nowrap">
                                             <div className="text-sm text-gray-900">
                                                 {salesman.properties?.length || 0} properties
                                             </div>
@@ -1184,7 +1184,7 @@ const SalesmanManagementPage = ({ user, onLogout }) => {
                                                 </div>
                                             )}
                                         </td>
-                                        <td className="px-0 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {salesman.salesLeads?.length || 0} active leads
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
