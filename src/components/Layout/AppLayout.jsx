@@ -86,6 +86,7 @@ const AppLayout = ({ children }) => {
         if (path === '/salesman-management') return ['salesmen'];
         if (path === '/settings') return ['settings'];
         if (path === '/sales-leads') return ['sales-leads'];
+        if (path === '/sales-commercial-leads') return ['sales-commercial-leads'];
         if (path === '/leads') return ['leads'];
         if (path === '/location-dashboard') return ['location-dashboard'];
         if (path === `/leads-map-new/${user?._id}`) return ['leads-map-new'];
@@ -118,6 +119,11 @@ const AppLayout = ({ children }) => {
             key: 'sales-leads',
             icon: <SiGoogleadsense />,
             label: <Link to="/sales-leads">Create Leads</Link>,
+        },
+        {
+            key: 'sales-commercial-leads',
+            icon: <SiGoogleadsense />,
+            label: <Link to="/sales-commercial-leads">Create Commercial Leads</Link>,
         },
         {
             key: 'web-leads',
@@ -178,6 +184,11 @@ const AppLayout = ({ children }) => {
             key: 'sales-leads',
             icon: <SiGoogleadsense />,
             label: <Link to="/sales-leads">Create Leads</Link>,
+        },
+        {
+            key: 'sales-commercial-leads',
+            icon: <SiGoogleadsense />,
+            label: <Link to="/sales-commercial-leads">Create Commercial Leads</Link>,
         },
         {
             key: 'web-leads',
