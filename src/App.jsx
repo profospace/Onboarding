@@ -156,10 +156,11 @@ function App() {
               <Route path="/settings" element={<ProtectedRouteWithLayout element={<SettingsPage />} />} />
 
               <Route path="/leads" element={<ProtectedRouteWithLayout element={<LeadsPage />} />} />
-              <Route path="/commercial-leads" element={<ProtectedRouteWithLayout element={<CommercialLeadsPage />} />} />
               <Route path="/lead/:id" element={<ProtectedRouteWithLayout element={<LeadDetailPage />} />} />
-              <Route path="/commercial/lead/:id" element={<ProtectedRouteWithLayout element={<CommercialLeadDetailPage />} />} />
               <Route path="/edit-lead/:id" element={<ProtectedRouteWithLayout element={<EditLeadPage />} />} />
+              
+              <Route path="/commercial-leads" element={<ProtectedRouteWithLayout element={<CommercialLeadsPage />} />} />
+              <Route path="/commercial/lead/:id" element={<ProtectedRouteWithLayout element={<CommercialLeadDetailPage />} />} />
               <Route path="/commercial-edit-lead/:id" element={<ProtectedRouteWithLayout element={<CommercialEditLeadPage />} />} />
 
               <Route path="/leads-map-new/:salesmanId" element={<SalesmanLeadsMap />} />

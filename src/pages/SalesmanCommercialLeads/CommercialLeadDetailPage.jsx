@@ -38,7 +38,7 @@ const CommercialLeadDetailPage = () => {
 
     const handleEditClick = (id) => {
         // Navigate to edit page with state containing lead data
-        navigate(`/edit-lead/${id}`);
+        navigate(`/commercial-edit-lead/${id}`);
     };
 
     const handleDeleteClick = () => {
@@ -66,12 +66,12 @@ const CommercialLeadDetailPage = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
-            <header className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+            <header className="bg-gradient-to-r from-[crimson] to-indigo-700 text-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                         <div>
                             <button
-                                onClick={() => navigate('/')}
+                                onClick={() => navigate('/commercial-leads')}
                                 className="flex items-center text-blue-100 hover:text-white transition-colors mb-2"
                             >
                                 <ArrowLeftIcon className="w-5 h-5 mr-1" />
