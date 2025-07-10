@@ -41,6 +41,7 @@ import SalesmanCommercialLeads from './SalesmanCommercialLeads';
 import CommercialLeadsPage from './pages/SalesmanCommercialLeads/CommercialLeadsPage';
 import CommercialLeadDetailPage from './pages/SalesmanCommercialLeads/CommercialLeadDetailPage';
 import CommercialEditLeadPage from './pages/SalesmanCommercialLeads/CommercialEditLeadPage';
+import CommercialSalesmanLeadsMap from './pages/SalesmanCommercialLeads/CommercialSalesmanLeadsMap';
 
 // Route wrapper with layout
 const ProtectedRouteWithLayout = ({ element }) => (
@@ -72,7 +73,7 @@ const SalesmanRouteWithLayout = ({ element }) => (
 function App() {
   // Initialize global location tracking
   const trackingState = useGlobalLocationTracking();
-  
+
   return (
     <>
       <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_API_KEY} libraries={["places"]} >
@@ -135,7 +136,7 @@ function App() {
               <Route path="/location-dashboard" element={<AdminRouteWithLayout element={<AdminLocationDashboard />} />} />
 
               {/* <Route path="/leads-map-new/:salesmanId" element={<AdminRouteWithLayout element={<SalesmanLeadsMap />}/> } /> */}
-              
+
 
 
               {/* Salesman routes */}
@@ -158,12 +159,15 @@ function App() {
               <Route path="/leads" element={<ProtectedRouteWithLayout element={<LeadsPage />} />} />
               <Route path="/lead/:id" element={<ProtectedRouteWithLayout element={<LeadDetailPage />} />} />
               <Route path="/edit-lead/:id" element={<ProtectedRouteWithLayout element={<EditLeadPage />} />} />
-              
+
               <Route path="/commercial-leads" element={<ProtectedRouteWithLayout element={<CommercialLeadsPage />} />} />
               <Route path="/commercial/lead/:id" element={<ProtectedRouteWithLayout element={<CommercialLeadDetailPage />} />} />
               <Route path="/commercial-edit-lead/:id" element={<ProtectedRouteWithLayout element={<CommercialEditLeadPage />} />} />
 
+              {/* Map view */}
               <Route path="/leads-map-new/:salesmanId" element={<SalesmanLeadsMap />} />
+              <Route path="/commercial-leads-map-new/:salesmanId" element={<CommercialSalesmanLeadsMap />} />
+
               <Route path="/web-leads" element={<ProtectedRouteWithLayout element={<LeadsManagementPage />} />} />  {/* Leads From Website Page  */}
 
 

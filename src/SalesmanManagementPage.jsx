@@ -1150,11 +1150,11 @@ const SalesmanManagementPage = ({ user, onLogout }) => {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td className="px-0 py-2 whitespace-nowrap">
                                             <div className="text-sm text-gray-900">{salesman.email}</div>
                                             <div className="text-sm text-gray-500">{salesman.phone || 'N/A'}</div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td className="px-0 py-2 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${salesman.role === 'admin' ? 'bg-purple-100 text-purple-800' :
                                                     salesman.role === 'manager' ? 'bg-blue-100 text-blue-800' :
@@ -1170,11 +1170,11 @@ const SalesmanManagementPage = ({ user, onLogout }) => {
                                                 </span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td className="px-0 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {formatDate(salesman.joinDate)}
                                         </td>
 
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td className="px-0 py-4 whitespace-nowrap">
                                             <div className="text-sm text-gray-900">
                                                 {salesman.properties?.length || 0} properties
                                             </div>
@@ -1184,11 +1184,11 @@ const SalesmanManagementPage = ({ user, onLogout }) => {
                                                 </div>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td className="px-0 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {salesman.salesLeads?.length || 0} active leads
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <div className="flex space-x-2">
+                                            <div className="flex  flex-col">
                                                 <button
                                                     onClick={() => {
                                                         navigate(`/leads-map-new/${salesman._id}`);
@@ -1196,6 +1196,14 @@ const SalesmanManagementPage = ({ user, onLogout }) => {
                                                     className="text-green-600 hover:text-green-900"
                                                 >
                                                     Leads Map
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        navigate(`/commercial-leads-map-new/${salesman._id}`);
+                                                    }}
+                                                    className="text-[crimson] hover:text-red-900"
+                                                >
+                                                    Commercial Leads Map
                                                 </button>
                                                 <button
                                                     onClick={() => {

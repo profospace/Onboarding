@@ -29,7 +29,7 @@ import {
 import { base_url } from '../../../utils/base_url';
 import { useSelector } from 'react-redux';
 
-const SalesmanLeadsMap = () => {
+const CommercialSalesmanLeadsMap = () => {
     const { salesmanId } = useParams();
     const navigate = useNavigate();
     const mapRef = useRef(null);
@@ -88,18 +88,18 @@ const SalesmanLeadsMap = () => {
 
             if (filterMode === 'all') {
                 // Fetch all leads for the salesman without date filter
-                url = `${base_url}/api/salesman/property/leads/salesman/${salesmanId}?limit=2000`;
+                url = `${base_url}/api/salesman/commercial/leads/salesman/${salesmanId}?limit=2000`;
             } else if (filterMode === 'range' && startDate && endDate) {
                 // Fetch leads for date range
                 params.append('startDate', startDate);
                 params.append('endDate', endDate);
                 params.append('limit', '1000');
-                url = `${base_url}/api/salesman/property/leads/salesman/${salesmanId}/by-date?${params.toString()}`;
+                url = `${base_url}/api/salesman/commercial/leads/salesman/${salesmanId}/by-date?${params.toString()}`;
             } else {
                 // Fetch leads for specific single date
                 params.append('date', selectedDate);
                 params.append('limit', '1000');
-                url = `${base_url}/api/salesman/property/leads/salesman/${salesmanId}/by-date?${params.toString()}`;
+                url = `${base_url}/api/salesman/commercial/leads/salesman/${salesmanId}/by-date?${params.toString()}`;
             }
 
             const response = await axios.get(url, {
@@ -853,9 +853,9 @@ const SalesmanLeadsMap = () => {
                                 <ArrowLeft className="h-4 w-4 mr-2" />
                                 Back
                             </button>
-                            <div>
+                            <div className=''>
                                 <h1 className="text-2xl font-bold text-gray-900">
-                                    {salesman?.name}'s Leads Map
+                                    {salesman?.name}'s Commercial Leads Map
                                 </h1>
                                 <p className="text-sm text-gray-600 mt-1">
                                     {formatDisplayDate()} • {filteredLeads.length} of {leads.length} leads
@@ -1462,4 +1462,4 @@ const SalesmanLeadsMap = () => {
     );
 };
 
-export default SalesmanLeadsMap;
+export default CommercialSalesmanLeadsMap;
