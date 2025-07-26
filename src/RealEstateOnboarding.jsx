@@ -30,7 +30,7 @@
 //         phoneNumber: ''
 //     });
 
-    
+
 
 //     console.log("selectedSalesman", selectedSalesman)
 
@@ -1053,7 +1053,7 @@
 //                     {renderBuilderForm()}
 //                 </div>: (
 
-                    
+
 //             <>
 //                             <div className="mx-auto">
 //                                 <div className="mx-auto ">
@@ -2589,6 +2589,42 @@ const RealEstateOnboarding = ({ user }) => {
         phoneNumber: ''
     });
 
+    // Add these state variables to your component
+    const [buildersList, setBuildersList] = useState([]);
+    const [selectedExistingBuilder, setSelectedExistingBuilder] = useState('');
+    const [builderSelectionMode, setBuilderSelectionMode] = useState('select'); // 'select' or 'create'
+    const [buildersLoading, setBuildersLoading] = useState(false);
+
+    console.log("buildersList********", buildersList)
+
+    // Add this function to fetch all builders
+    const getAllBuilders = async () => {
+        setBuildersLoading(true);
+        try {
+            const response = await axios.get(`${base_url}/builders`, {
+                headers: { Authorization: `Bearer ${details?.token}` }
+            });
+
+            console.log('response', response)
+
+            if (response?.data) {
+                setBuildersList(response?.data || []);
+            }
+        } catch (error) {
+            console.error("Error fetching builders:", error);
+            toast.error("Failed to fetch builders");
+        } finally {
+            setBuildersLoading(false);
+        }
+    };
+
+    // Add useEffect to fetch builders when builder tab is accessed
+    useEffect(() => {
+        if (activeTab === 'builder') {
+            getAllBuilders();
+        }
+    }, [activeTab]);
+
 
 
     console.log("selectedSalesman", selectedSalesman)
@@ -2619,6 +2655,19 @@ const RealEstateOnboarding = ({ user }) => {
     useEffect(() => {
         getAllSalesman();
     }, []);
+
+
+    // Add this new function to handle existing builder selection
+    const handleExistingBuilderSelection = () => {
+        const selectedBuilder = buildersList.find(b => b._id === selectedExistingBuilder);
+        if (selectedBuilder) {
+            setBuilderResponse({
+                success: true,
+                builder: selectedBuilder
+            });
+            toast.success('Builder selected successfully!');
+        }
+    };
 
     const handleFormSubmit = (values) => {
         console.log('Form values:', values);
@@ -2875,7 +2924,7 @@ const RealEstateOnboarding = ({ user }) => {
     };
 
     // Available options for select fields
-    const propertyTypes = ['Apartment', 'House', 'Shops', 'Warehouses', 'Halls', 'Land' , 'Builder Floor'];
+    const propertyTypes = ['Apartment', 'House', 'Shops', 'Warehouses', 'Halls', 'Land', 'Builder Floor'];
     const propertyCategories = ['Residential', 'Commercial', 'Industrial', 'Agricultural'];
     const furnishingOptions = ['Unfurnished', 'Semi-Furnished', 'Fully-Furnished', 'Modular-Kitchen', 'Wardrobes-Included', 'Air-Conditioners-Included', 'Premium-Furnishings'];
     const directionOptions = ['North', 'South', 'East', 'West', 'North-East', 'North-West', 'South-East', 'South-West'];
@@ -3550,12 +3599,23 @@ const RealEstateOnboarding = ({ user }) => {
 
     console.log("BuilderRes", builderResponse)
     // Reset builder form
+    // const resetBuilderForm = () => {
+    //     setBuilderData({
+    //         name: '',
+    //         phoneNumber: ''
+    //     });
+    //     setBuilderResponse(null);
+    // };
+
+    // Update the resetBuilderForm function
     const resetBuilderForm = () => {
         setBuilderData({
             name: '',
             phoneNumber: ''
         });
         setBuilderResponse(null);
+        setSelectedExistingBuilder('');
+        setBuilderSelectionMode('select');
     };
 
     // Helper function to render image with proper handling
@@ -3619,6 +3679,116 @@ const RealEstateOnboarding = ({ user }) => {
     };
 
     // Builder form component
+    // const renderBuilderForm = () => {
+    //     if (builderResponse) {
+    //         return (
+    //             <div className="bg-white p-6 rounded-lg shadow-sm border text-center">
+    //                 <div className="py-8">
+    //                     <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
+    //                     <h3 className="text-xl font-medium text-gray-900 mb-2">
+    //                         Builder Created Successfully!
+    //                     </h3>
+    //                     <div className="bg-green-50 p-4 rounded-lg mt-4 text-left">
+    //                         <p className="text-sm text-green-800">
+    //                             <strong>Builder ID:</strong> {builderResponse.builder?._id}
+    //                         </p>
+    //                         <p className="text-sm text-green-800">
+    //                             <strong>Name:</strong> {builderResponse.builder?.name}
+    //                         </p>
+    //                         {builderResponse.builder?.username && (
+    //                             <p className="text-sm text-green-800">
+    //                                 <strong>Username:</strong> {builderResponse.builder.username}
+    //                             </p>
+    //                         )}
+    //                         {builderResponse.builder?.password && (
+    //                             <p className="text-sm text-green-800">
+    //                                 <strong>Password:</strong> {builderResponse.builder.password}
+    //                             </p>
+    //                         )}
+    //                     </div>
+    //                     <button
+    //                         onClick={resetBuilderForm}
+    //                         className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+    //                     >
+    //                         Create Another Builder
+    //                     </button>
+    //                 </div>
+    //             </div>
+    //         );
+    //     }
+
+    //     return (
+    //         <div className="bg-white p-6 rounded-lg shadow-sm border">
+    //             <h3 className="text-lg font-semibold mb-4 flex items-center">
+    //                 <Building className="mr-2 h-5 w-5" />
+    //                 Create New Builder
+    //             </h3>
+
+    //             <div className="space-y-4">
+    //                 <div>
+    //                     <label className="block text-sm font-medium text-gray-700 mb-2">
+    //                         Builder Name *
+    //                     </label>
+    //                     <input
+    //                         type="text"
+    //                         value={builderData.name}
+    //                         onChange={(e) => handleBuilderChange('name', e.target.value)}
+    //                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+    //                         placeholder="Enter builder/company name"
+    //                     />
+    //                 </div>
+
+    //                 <div>
+    //                     <label className="block text-sm font-medium text-gray-700 mb-2">
+    //                         Phone Number *
+    //                     </label>
+    //                     <input
+    //                         type="tel"
+    //                         value={builderData.phoneNumber}
+    //                         onChange={(e) => handleBuilderChange('phoneNumber', e.target.value)}
+    //                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+    //                         placeholder="Enter phone number"
+    //                         pattern="[0-9]{10}"
+    //                         maxLength="10"
+    //                     />
+    //                     <p className="text-xs text-gray-500 mt-1">Enter a 10-digit mobile number</p>
+    //                 </div>
+
+    //                 <div className="pt-4">
+    //                     <button
+    //                         onClick={handleBuilderUpload}
+    //                         disabled={!isBuilderUploadEnabled || builderLoading}
+    //                         className={`w-full px-6 py-3 rounded-lg flex items-center justify-center ${!isBuilderUploadEnabled || builderLoading
+    //                             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+    //                             : 'bg-green-600 text-white hover:bg-green-700'
+    //                             }`}
+    //                     >
+    //                         {builderLoading ? (
+    //                             <div className="flex items-center">
+    //                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+    //                                 Creating Builder...
+    //                             </div>
+    //                         ) : (
+    //                             <div className="flex items-center">
+    //                                 <Upload className="h-4 w-4 mr-2" />
+    //                                 Create Builder
+    //                             </div>
+    //                         )}
+    //                     </button>
+
+    //                     {!isBuilderUploadEnabled && (
+    //                         <p className="text-sm text-orange-600 mt-2 text-center">
+    //                             Please fill in both name and phone number to create builder
+    //                         </p>
+    //                     )}
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     );
+    // };
+
+
+    // Enhanced builder form component with selection option
     const renderBuilderForm = () => {
         if (builderResponse) {
             return (
@@ -3626,7 +3796,7 @@ const RealEstateOnboarding = ({ user }) => {
                     <div className="py-8">
                         <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
                         <h3 className="text-xl font-medium text-gray-900 mb-2">
-                            Builder Created Successfully!
+                            Builder Selected/Created Successfully!
                         </h3>
                         <div className="bg-green-50 p-4 rounded-lg mt-4 text-left">
                             <p className="text-sm text-green-800">
@@ -3650,7 +3820,7 @@ const RealEstateOnboarding = ({ user }) => {
                             onClick={resetBuilderForm}
                             className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                         >
-                            Create Another Builder
+                            Change Builder Selection
                         </button>
                     </div>
                 </div>
@@ -3661,68 +3831,163 @@ const RealEstateOnboarding = ({ user }) => {
             <div className="bg-white p-6 rounded-lg shadow-sm border">
                 <h3 className="text-lg font-semibold mb-4 flex items-center">
                     <Building className="mr-2 h-5 w-5" />
-                    Create New Builder
+                    Builder Management
                 </h3>
 
-                <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Builder Name *
-                        </label>
-                        <input
-                            type="text"
-                            value={builderData.name}
-                            onChange={(e) => handleBuilderChange('name', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Enter builder/company name"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Phone Number *
-                        </label>
-                        <input
-                            type="tel"
-                            value={builderData.phoneNumber}
-                            onChange={(e) => handleBuilderChange('phoneNumber', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Enter phone number"
-                            pattern="[0-9]{10}"
-                            maxLength="10"
-                        />
-                        <p className="text-xs text-gray-500 mt-1">Enter a 10-digit mobile number</p>
-                    </div>
-
-                    <div className="pt-4">
+                {/* Mode Selection */}
+                <div className="mb-6">
+                    <div className="flex space-x-4">
                         <button
-                            onClick={handleBuilderUpload}
-                            disabled={!isBuilderUploadEnabled || builderLoading}
-                            className={`w-full px-6 py-3 rounded-lg flex items-center justify-center ${!isBuilderUploadEnabled || builderLoading
-                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                : 'bg-green-600 text-white hover:bg-green-700'
+                            onClick={() => setBuilderSelectionMode('select')}
+                            className={`px-4 py-2 rounded-lg font-medium text-sm ${builderSelectionMode === 'select'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                                 }`}
                         >
-                            {builderLoading ? (
-                                <div className="flex items-center">
-                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                    Creating Builder...
-                                </div>
-                            ) : (
-                                <div className="flex items-center">
-                                    <Upload className="h-4 w-4 mr-2" />
-                                    Create Builder
-                                </div>
-                            )}
+                            Select Existing Builder
                         </button>
-
-                        {!isBuilderUploadEnabled && (
-                            <p className="text-sm text-orange-600 mt-2 text-center">
-                                Please fill in both name and phone number to create builder
-                            </p>
-                        )}
+                        <button
+                            onClick={() => setBuilderSelectionMode('create')}
+                            className={`px-4 py-2 rounded-lg font-medium text-sm ${builderSelectionMode === 'create'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                }`}
+                        >
+                            Create New Builder
+                        </button>
                     </div>
                 </div>
+
+                {builderSelectionMode === 'select' ? (
+                    // Existing Builder Selection
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Select Builder *
+                            </label>
+                            {buildersLoading ? (
+                                <div className="flex items-center justify-center py-4">
+                                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                                    <span className="ml-2 text-gray-600">Loading builders...</span>
+                                </div>
+                            ) : (
+                                <select
+                                    value={selectedExistingBuilder}
+                                    onChange={(e) => setSelectedExistingBuilder(e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">Choose a builder...</option>
+                                    {buildersList.map((builder) => (
+                                        <option key={builder._id} value={builder._id}>
+                                            {builder.name} {builder.contacts && builder.contacts.length > 0 && `- ${builder.contacts[0]}`}
+                                        </option>
+                                    ))}
+                                </select>
+                            )}
+                            {buildersList.length === 0 && !buildersLoading && (
+                                <p className="text-sm text-gray-500 mt-2">
+                                    No builders found. You can create a new one using the "Create New Builder" option.
+                                </p>
+                            )}
+                        </div>
+
+                        {selectedExistingBuilder && (
+                            <div className="bg-blue-50 p-4 rounded-lg">
+                                {(() => {
+                                    const selectedBuilder = buildersList.find(b => b._id === selectedExistingBuilder);
+                                    return selectedBuilder ? (
+                                        <div>
+                                            <h4 className="font-medium text-blue-900 mb-2">Selected Builder Details:</h4>
+                                            <div className="text-sm text-blue-800 space-y-1">
+                                                <p><strong>Name:</strong> {selectedBuilder.name}</p>
+                                                {selectedBuilder.contacts && selectedBuilder.contacts.length > 0 && (
+                                                    <p><strong>Contact:</strong> {selectedBuilder.contacts.join(', ')}</p>
+                                                )}
+                                                <p><strong>Status:</strong> {selectedBuilder.status || 'Active'}</p>
+                                                <p><strong>Created:</strong> {new Date(selectedBuilder.createdAt).toLocaleDateString()}</p>
+                                            </div>
+                                        </div>
+                                    ) : null;
+                                })()}
+                            </div>
+                        )}
+
+                        <div className="pt-4">
+                            <button
+                                onClick={handleExistingBuilderSelection}
+                                disabled={!selectedExistingBuilder}
+                                className={`w-full px-6 py-3 rounded-lg flex items-center justify-center ${!selectedExistingBuilder
+                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                                    }`}
+                            >
+                                <Building className="h-4 w-4 mr-2" />
+                                Select This Builder
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    // Create New Builder Form (existing code)
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Builder Name *
+                            </label>
+                            <input
+                                type="text"
+                                value={builderData.name}
+                                onChange={(e) => handleBuilderChange('name', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter builder/company name"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Phone Number *
+                            </label>
+                            <input
+                                type="tel"
+                                value={builderData.phoneNumber}
+                                onChange={(e) => handleBuilderChange('phoneNumber', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter phone number"
+                                pattern="[0-9]{10}"
+                                maxLength="10"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">Enter a 10-digit mobile number</p>
+                        </div>
+
+                        <div className="pt-4">
+                            <button
+                                onClick={handleBuilderUpload}
+                                disabled={!isBuilderUploadEnabled || builderLoading}
+                                className={`w-full px-6 py-3 rounded-lg flex items-center justify-center ${!isBuilderUploadEnabled || builderLoading
+                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                    : 'bg-green-600 text-white hover:bg-green-700'
+                                    }`}
+                            >
+                                {builderLoading ? (
+                                    <div className="flex items-center">
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                        Creating Builder...
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center">
+                                        <Upload className="h-4 w-4 mr-2" />
+                                        Create Builder
+                                    </div>
+                                )}
+                            </button>
+
+                            {!isBuilderUploadEnabled && (
+                                <p className="text-sm text-orange-600 mt-2 text-center">
+                                    Please fill in both name and phone number to create builder
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
         );
     };
