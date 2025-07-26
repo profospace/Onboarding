@@ -258,7 +258,7 @@ const AppLayout = ({ children }) => {
                 },
             }}
         >
-            <Layout style={{ minHeight: '100vh' }}>
+            <Layout style={{ minHeight: '100vh' }} >
                 {/* Desktop Sidebar */}
                 {!mobileView && (
                     <Sider

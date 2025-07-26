@@ -1,2 +1,10 @@
 @import "tailwindcss";
 
+@font-face {
+    font-family: 'Athletics';
+    src: url('/fonts/Athletics_Sans_Font_Family/Athletics Regular.otf') format('opentype');
+    /* url('/assets/fonts/Athletics_Sans_Font_Family/Helvetica.ttf') format('opentype'),
+        url('/assets/fonts/Athletics_Sans_Font_Family/Helvetica.ttf') format('opentype'); */
+    font-weight: normal;
+    font-style: normal;
+}
