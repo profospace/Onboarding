@@ -13,7 +13,7 @@ const defaultCenter = {
     lng: 77.2090
 };
 
-const LocationPicker = ({ address, city, onLocationSelect }) => {
+const LocationPicker = ({ address, city, latitude, longitude, onLocationSelect, preventAutoGeocode }) => {
     const [map, setMap] = useState(null);
     const [marker, setMarker] = useState(null);
     const [center, setCenter] = useState(defaultCenter);
@@ -21,11 +21,19 @@ const LocationPicker = ({ address, city, onLocationSelect }) => {
     const [locationError, setLocationError] = useState('');
 
     // Geocode the address when it changes
+    // useEffect(() => {
+    //     if (address && city && window.google && window.google.maps) {
+    //         geocodeAddress(`${address}, ${city}`);
+    //     }
+    // }, [address, city]);
+
+    // Update this useEffect to respect the preventAutoGeocode flag
     useEffect(() => {
-        if (address && city && window.google && window.google.maps) {
+        // CHANGE THIS CONDITION - add preventAutoGeocode check
+        if (address && city && window.google && window.google.maps && !preventAutoGeocode) {
             geocodeAddress(`${address}, ${city}`);
         }
-    }, [address, city]);
+    }, [address, city, preventAutoGeocode]); // ADD preventAutoGeocode to dependencies
 
     // Function to geocode address to coordinates
     const geocodeAddress = useCallback((fullAddress) => {
@@ -237,12 +245,17 @@ const LocationPicker = ({ address, city, onLocationSelect }) => {
         }
     };
 
-    useEffect(
-        () => {
-            console.log(import.meta.env.VITE_GOOGLE_API_KEY)
+    // ADD THIS NEW useEffect after the existing ones
+    useEffect(() => {
+        // Update map center and marker when coordinates are manually entered
+        if (latitude && longitude && !isNaN(latitude) && !isNaN(longitude)) {
+            const position = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+            setCenter(position);
+            setMarker(position);
+        }
+    }, [latitude, longitude]);
 
-        }, []
-    )
+   
 
     return (
         <div className="mb-6">

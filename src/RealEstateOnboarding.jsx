@@ -2629,7 +2629,8 @@ const RealEstateOnboarding = ({ user }) => {
     const handleAddressChange = async (field, value) => {
         const updatedFormData = {
             ...formData,
-            [field]: value
+            [field]: value,
+            preventAutoGeocode: true
         };
 
         setFormData(updatedFormData);
@@ -2948,6 +2949,7 @@ const RealEstateOnboarding = ({ user }) => {
             ...formData,
             latitude: locationData.lat,
             longitude: locationData.lng,
+            preventAutoGeocode: false, 
             // Auto-fill address fields if provided
             ...(locationData.address && { address: locationData.address }),
             ...(locationData.locality && { locality: locationData.locality }),
@@ -4538,6 +4540,7 @@ const RealEstateOnboarding = ({ user }) => {
                                                     latitude={formData.latitude}
                                                     longitude={formData.longitude}
                                                     onLocationSelect={handleLocationSelect}
+                                                    preventAutoGeocode={formData.preventAutoGeocode}  
                                                 />
 
                                                 {/* Display selected coordinates */}
