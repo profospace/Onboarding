@@ -1048,7 +1048,7 @@
 //                 </div>
 //             </div>
 //             {
-//                 activeTab === 'builder' ? 
+//                 activeTab === 'builder' ?
 //                     <div className="max-w-2xl mx-auto">
 //                     {renderBuilderForm()}
 //                 </div>: (
@@ -1170,7 +1170,7 @@
 //                                     current={currentStep - 1}
 //                                     percent={((currentStep - 1) / 7) * 100}
 //                                     onChange={(current) => navigateToStep(current + 1)}
-//                                     // type="navigation" 
+//                                     // type="navigation"
 //                                     items={[
 //                                         {
 //                                             title: 'Basic Details',
@@ -2625,6 +2625,41 @@ const RealEstateOnboarding = ({ user }) => {
         }
     }, [activeTab]);
 
+    // Add this function after handleLatLngChange function
+    const handleAddressChange = async (field, value) => {
+        const updatedFormData = {
+            ...formData,
+            [field]: value
+        };
+
+        setFormData(updatedFormData);
+
+        // If we have address, city, trigger geocoding after a delay
+        if (updatedFormData.address && updatedFormData.city) {
+            clearTimeout(window.geocodeTimeout);
+            window.geocodeTimeout = setTimeout(() => {
+                if (window.google && window.google.maps) {
+                    const geocoder = new window.google.maps.Geocoder();
+                    const fullAddress = `${updatedFormData.address}, ${updatedFormData.city}`;
+
+                    geocoder.geocode({ address: fullAddress }, (results, status) => {
+                        if (status === 'OK' && results[0]) {
+                            const position = {
+                                lat: results[0].geometry.location.lat(),
+                                lng: results[0].geometry.location.lng()
+                            };
+
+                            setFormData(prev => ({
+                                ...prev,
+                                latitude: position.lat,
+                                longitude: position.lng
+                            }));
+                        }
+                    });
+                }
+            }, 1000); // 1 second delay to avoid too many API calls
+        }
+    };
 
 
     console.log("selectedSalesman", selectedSalesman)
@@ -2899,11 +2934,25 @@ const RealEstateOnboarding = ({ user }) => {
     };
 
     // Add a function to handle location selection from the map
-    const handleLocationSelect = (position) => {
+    // const handleLocationSelect = (position) => {
+    //     setFormData({
+    //         ...formData,
+    //         latitude: position.lat,
+    //         longitude: position.lng
+    //     });
+    // };
+
+    // Replace existing handleLocationSelect function
+    const handleLocationSelect = (locationData) => {
         setFormData({
             ...formData,
-            latitude: position.lat,
-            longitude: position.lng
+            latitude: locationData.lat,
+            longitude: locationData.lng,
+            // Auto-fill address fields if provided
+            ...(locationData.address && { address: locationData.address }),
+            ...(locationData.locality && { locality: locationData.locality }),
+            ...(locationData.city && { city: locationData.city }),
+            ...(locationData.pincode && { pincode: locationData.pincode })
         });
     };
 
@@ -4142,7 +4191,7 @@ const RealEstateOnboarding = ({ user }) => {
                                     current={currentStep - 1}
                                     percent={((currentStep - 1) / 7) * 100}
                                     onChange={(current) => navigateToStep(current + 1)}
-                                    // type="navigation" 
+                                    // type="navigation"
                                     items={[
                                         {
                                             title: 'Basic Details',
@@ -4256,7 +4305,7 @@ const RealEstateOnboarding = ({ user }) => {
                                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                                     >
                                                         <option value="">Select</option>
-                                                        {[1, 2, 3, 4, 5, '5+'].map(num => (
+                                                        {[1, 2, 3, 4, 5,6 , 7 , 8 ,9,10].map(num => (
                                                             <option key={num} value={num}>{num}</option>
                                                         ))}
                                                     </select>
@@ -4274,7 +4323,7 @@ const RealEstateOnboarding = ({ user }) => {
                                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                                     >
                                                         <option value="">Select</option>
-                                                        {[1, 2, 3, 4, 5, '5+'].map(num => (
+                                                        {[1, 2, 3, 4, 5,6 , 7 , 8 , 9 , 10].map(num => (
                                                             <option key={num} value={num}>{num}</option>
                                                         ))}
                                                     </select>
@@ -4292,7 +4341,7 @@ const RealEstateOnboarding = ({ user }) => {
                                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                                     >
                                                         <option value="">Select</option>
-                                                        {[0, 1, 2, 3, 4, '4+'].map(num => (
+                                                        {[0, 1, 2, 3, 4, 5 , 6 , 7 , 8 , 9 ,10].map(num => (
                                                             <option key={num} value={num}>{num}</option>
                                                         ))}
                                                     </select>
@@ -4370,7 +4419,7 @@ const RealEstateOnboarding = ({ user }) => {
                                                         id="address"
                                                         name="address"
                                                         value={formData.address}
-                                                        onChange={handleChange}
+                                                        onChange={(e) => handleAddressChange('address', e.target.value)}
                                                         required
                                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                                         placeholder="Street address"
@@ -4387,7 +4436,7 @@ const RealEstateOnboarding = ({ user }) => {
                                                             id="city"
                                                             name="city"
                                                             value={formData.city}
-                                                            onChange={handleChange}
+                                                            onChange={(e) => handleAddressChange('city', e.target.value)}
                                                             required
                                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                                             placeholder="City"
@@ -4403,7 +4452,7 @@ const RealEstateOnboarding = ({ user }) => {
                                                             id="locality"
                                                             name="locality"
                                                             value={formData.locality}
-                                                            onChange={handleChange}
+                                                            onChange={(e) => handleAddressChange('locality', e.target.value)}
                                                             required
                                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                                             placeholder="Locality"
@@ -4419,7 +4468,7 @@ const RealEstateOnboarding = ({ user }) => {
                                                             id="pincode"
                                                             name="pincode"
                                                             value={formData.pincode}
-                                                            onChange={handleChange}
+                                                            onChange={(e) => handleAddressChange('pincode', e.target.value)}
                                                             required
                                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                                             placeholder="PIN Code"

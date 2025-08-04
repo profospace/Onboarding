@@ -53,7 +53,77 @@ const LocationPicker = ({ address, city, onLocationSelect }) => {
         });
     }, [onLocationSelect]);
 
+    // Add this function after geocodeAddress function
+    const reverseGeocode = useCallback((position) => {
+        if (!window.google || !window.google.maps) return;
+
+        const geocoder = new window.google.maps.Geocoder();
+        geocoder.geocode({ location: position }, (results, status) => {
+            if (status === 'OK' && results[0]) {
+                const result = results[0];
+                const addressComponents = result.address_components;
+
+                // Extract address components
+                let street = '';
+                let locality = '';
+                let city = '';
+                let pincode = '';
+
+                addressComponents.forEach(component => {
+                    const types = component.types;
+                    if (types.includes('street_number') || types.includes('route')) {
+                        street += component.long_name + ' ';
+                    }
+                    if (types.includes('sublocality') || types.includes('neighborhood')) {
+                        locality = component.long_name;
+                    }
+                    if (types.includes('locality') || types.includes('administrative_area_level_2')) {
+                        city = component.long_name;
+                    }
+                    if (types.includes('postal_code')) {
+                        pincode = component.long_name;
+                    }
+                });
+
+                // Call callback with extracted data
+                if (onLocationSelect) {
+                    onLocationSelect({
+                        ...position,
+                        address: street.trim() || result.formatted_address,
+                        locality: locality,
+                        city: city,
+                        pincode: pincode
+                    });
+                }
+            }
+        });
+    }, [onLocationSelect]);
+
     // Handle map click to set marker position
+    // const handleMapClick = useCallback((event) => {
+    //     const position = {
+    //         lat: event.latLng.lat(),
+    //         lng: event.latLng.lng()
+    //     };
+
+    //     setMarker(position);
+
+    //     if (onLocationSelect) {
+    //         onLocationSelect(position);
+    //     }
+
+    //     // Reverse geocode to get address (optional)
+    //     if (window.google && window.google.maps) {
+    //         const geocoder = new window.google.maps.Geocoder();
+    //         geocoder.geocode({ location: position }, (results, status) => {
+    //             if (status === 'OK' && results[0]) {
+    //                 console.log('Address:', results[0].formatted_address);
+    //             }
+    //         });
+    //     }
+    // }, [onLocationSelect]);
+
+    // Replace existing handleMapClick function
     const handleMapClick = useCallback((event) => {
         const position = {
             lat: event.latLng.lat(),
@@ -62,20 +132,39 @@ const LocationPicker = ({ address, city, onLocationSelect }) => {
 
         setMarker(position);
 
-        if (onLocationSelect) {
-            onLocationSelect(position);
-        }
+        // Reverse geocode to get address details
+        reverseGeocode(position);
+    }, [reverseGeocode]);
 
-        // Reverse geocode to get address (optional)
-        if (window.google && window.google.maps) {
-            const geocoder = new window.google.maps.Geocoder();
-            geocoder.geocode({ location: position }, (results, status) => {
-                if (status === 'OK' && results[0]) {
-                    console.log('Address:', results[0].formatted_address);
+    // Add this useEffect after existing useEffects
+    useEffect(() => {
+        // Auto-fetch current location on component mount
+        if (navigator.geolocation && !marker) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const currentPosition = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    setCenter(currentPosition);
+                    setMarker(currentPosition);
+
+                    // Reverse geocode to get address details
+                    reverseGeocode(currentPosition);
+                },
+                (error) => {
+                    console.log('Auto location fetch failed:', error);
+                    // Silently fail, user can still use manual location
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 300000 // 5 minutes
                 }
-            });
+            );
         }
-    }, [onLocationSelect]);
+    }, []); // Empty dependency array to run only once on mount
 
     // Function to handle map load
     const onLoad = useCallback((map) => {
@@ -149,10 +238,10 @@ const LocationPicker = ({ address, city, onLocationSelect }) => {
     };
 
     useEffect(
-        ()=>{
+        () => {
             console.log(import.meta.env.VITE_GOOGLE_API_KEY)
 
-        },[]
+        }, []
     )
 
     return (
@@ -195,28 +284,44 @@ const LocationPicker = ({ address, city, onLocationSelect }) => {
                 <div className="text-sm text-red-500 mb-2">{locationError}</div>
             )}
 
-                <GoogleMap
-                    mapContainerStyle={containerStyle}
-                    center={center}
-                    zoom={14}
-                    onClick={handleMapClick}
-                    onLoad={onLoad}
-                    onUnmount={onUnmount}
-                    options={{
-                        streetViewControl: false,
-                        mapTypeControl: false,
-                        fullscreenControl: true,
-                    }}
-                >
-                    {marker && <Marker position={marker} draggable={true} onDragEnd={(e) => {
+            <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={center}
+                zoom={14}
+                onClick={handleMapClick}
+                onLoad={onLoad}
+                onUnmount={onUnmount}
+                options={{
+                    streetViewControl: false,
+                    mapTypeControl: false,
+                    fullscreenControl: true,
+                }}
+            >
+                {/* {marker && <Marker position={marker} draggable={true} onDragEnd={(e) => {
                         const position = {
                             lat: e.latLng.lat(),
                             lng: e.latLng.lng()
                         };
                         setMarker(position);
                         onLocationSelect(position);
-                    }} />}
-                </GoogleMap>
+                    }} />} */}
+
+                    // In the GoogleMap component, update the Marker component
+                {marker && <Marker
+                    position={marker}
+                    draggable={true}
+                    onDragEnd={(e) => {
+                        const position = {
+                            lat: e.latLng.lat(),
+                            lng: e.latLng.lng()
+                        };
+                        setMarker(position);
+
+                        // Reverse geocode to get address details when marker is dragged
+                        reverseGeocode(position);
+                    }}
+                />}
+            </GoogleMap>
 
             {marker && (
                 <div className="mt-2 text-sm text-gray-500">
