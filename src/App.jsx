@@ -42,6 +42,7 @@ import CommercialLeadsPage from './pages/SalesmanCommercialLeads/CommercialLeads
 import CommercialLeadDetailPage from './pages/SalesmanCommercialLeads/CommercialLeadDetailPage';
 import CommercialEditLeadPage from './pages/SalesmanCommercialLeads/CommercialEditLeadPage';
 import CommercialSalesmanLeadsMap from './pages/SalesmanCommercialLeads/CommercialSalesmanLeadsMap';
+import Lasso from './Lasso';
 
 // Route wrapper with layout
 const ProtectedRouteWithLayout = ({ element }) => (
@@ -76,7 +77,7 @@ function App() {
 
   return (
     <>
-      <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_API_KEY} libraries={["places"]} >
+      <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_API_KEY} libraries={["places", 'drawing']} >
 
         <ConfigProvider
           theme={{
@@ -172,11 +173,15 @@ function App() {
 
 
 
+
+
               {/* Redirect to appropriate default page */}
               <Route path="/" element={<Navigate to="/login" />} />
 
 
+              <Route path="/diff/lasso"element={<Lasso />} />  {/* Leads From Website Page  */}
             </Routes>
+
           </Router>
         </ConfigProvider>
       </LoadScript>
