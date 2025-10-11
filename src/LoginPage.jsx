@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate , Link} from 'react-router-dom';
 import { login, reset } from '../redux/features/auth/authSlice' ;
 
 
@@ -229,9 +229,9 @@ const LoginPage = () => {
                         </div>
 
                         <div className="text-sm">
-                            <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                            <Link to="/forgot-password-salesman" className="font-medium text-blue-600 hover:text-blue-500">
                                 Forgot your password?
-                            </a>
+                            </Link>
                         </div>
                     </div>
 

@@ -43,6 +43,8 @@ import CommercialLeadDetailPage from './pages/SalesmanCommercialLeads/Commercial
 import CommercialEditLeadPage from './pages/SalesmanCommercialLeads/CommercialEditLeadPage';
 import CommercialSalesmanLeadsMap from './pages/SalesmanCommercialLeads/CommercialSalesmanLeadsMap';
 import Lasso from './Lasso';
+import ForgotPasswordSalesman from './ForgotPasswordSalesman';
+import ResetPasswordSalesman from './ResetPasswordSalesman';
 
 // Route wrapper with layout
 const ProtectedRouteWithLayout = ({ element }) => (
@@ -128,6 +130,10 @@ function App() {
 
               {/* Admin routes */}
               <Route path="/admin-signup" element={<AdminRouteWithLayout element={<AdminSignup />} />} />
+
+              <Route path='/forgot-password-salesman' element={<ForgotPasswordSalesman />} />
+              <Route path='/reset-password-salesman/:token' element={<ResetPasswordSalesman />} />
+
               <Route path="/salesman-management" element={<AdminRouteWithLayout element={<SalesmanManagementPage />} />} />
               <Route path="/property-management" element={<AdminRouteWithLayout element={<PropertyManagementPage />} />} />
               <Route path="/salesman/stats/:id" element={<AdminRouteWithLayout element={<SalesmanStats />} />} />
