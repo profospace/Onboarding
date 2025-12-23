@@ -18,29 +18,82 @@ const register = async (userData) => {
 
 // Login user
 const login = async (userData) => {
-    // Determine which endpoint to use based on login type
+    console.log('[AUTH SERVICE] Login called');
+    console.log('[AUTH SERVICE] Payload:', {
+        username: userData.username,
+        isAdmin: userData.isAdmin
+    });
+
     const endpoint = userData.isAdmin
         ? `${ADMIN_API}/login`
         : `${SALESMAN_API}/login`;
 
-    const response = await axios.post(endpoint, {
-        username: userData.username,
-        password: userData.password
-    });
+    console.log('[AUTH SERVICE] Using endpoint:', endpoint);
 
-    if (response.data) {
-        const userData = {
-            ...response.data.data.salesman,
-            token: response.data.data.token,
-            userType: response.data.data.salesman.role === 'admin' ? 'admin' : 'salesman'
-        };
+    try {
+        const response = await axios.post(endpoint, {
+            username: userData.username,
+            password: userData.password
+        });
 
-        localStorage.setItem('user', JSON.stringify(userData));
-        localStorage.setItem('token', userData.token);
-        return userData;
+        console.log('[AUTH SERVICE] Raw response:', response.data);
+
+        const data = response.data?.data;
+
+        if (!data) {
+            console.error('[AUTH SERVICE] Missing `data` in response');
+            throw 'Invalid server response';
+        }
+
+        let user;
+
+        // 🔑 ADMIN LOGIN
+        if (userData.isAdmin) {
+            console.log('[AUTH SERVICE] Processing ADMIN login');
+
+            user = {
+                role: 'admin',
+                token: data.token,
+                userType: 'admin',
+            };
+        }
+        // 🔑 SALESMAN LOGIN
+        else {
+            console.log('[AUTH SERVICE] Processing SALESMAN login');
+
+            if (!data.salesman) {
+                console.error('[AUTH SERVICE] Missing salesman object in response');
+                throw 'Invalid salesman response';
+            }
+
+            user = {
+                ...data.salesman,
+                token: data.token,
+                userType: 'salesman',
+            };
+        }
+
+        console.log('[AUTH SERVICE] Normalized user object:', user);
+
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('token', user.token);
+
+        console.log('[AUTH SERVICE] User stored in localStorage');
+
+        return user; // ✅ Redux receives THIS
+    } catch (error) {
+        console.error('[AUTH SERVICE] Login failed:', error);
+
+        const message =
+            error.response?.data?.message ||
+            error.message ||
+            error ||
+            'Login failed';
+
+        console.error('[AUTH SERVICE] Error message resolved:', message);
+
+        throw message;
     }
-
-    return response.data;
 };
 
 // Logout user

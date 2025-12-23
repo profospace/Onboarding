@@ -31,21 +31,32 @@ export const register = createAsyncThunk(
 );
 
 // Login user
+// export const login = createAsyncThunk(
+//     'auth/login',
+//     async (user, thunkAPI) => {
+//         try {
+//             return await authService.login(user);
+//         } catch (error) {
+//             const message =
+//                 (error.response &&
+//                     error.response.data &&
+//                     error.response.data.message) ||
+//                 error.message ||
+//                 error.toString();
+//             return thunkAPI.rejectWithValue(message);
+//         }
+//     }
+// );
+
 export const login = createAsyncThunk(
-    'auth/login',
-    async (user, thunkAPI) => {
-        try {
-            return await authService.login(user);
-        } catch (error) {
-            const message =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
-            return thunkAPI.rejectWithValue(message);
-        }
+  'auth/login',
+  async (user, thunkAPI) => {
+    try {
+      return await authService.login(user);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
     }
+  }
 );
 
 // Logout user
