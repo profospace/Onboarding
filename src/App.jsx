@@ -12,7 +12,7 @@ import { ProtectedRoute, AdminRoute, SalesmanRoute } from './routes/ProtectedRou
 
 // Import components
 import LoginPage from './LoginPage';
-import DashboardPage from './DashboardPage';
+import DashboardxPage from './DashboardPage';
 import RealEstateOnboarding from './RealEstateOnboarding';
 import SalesmanManagementPage from './SalesmanManagementPage';
 import PropertyManagementPage from './PropertyManagementPage';

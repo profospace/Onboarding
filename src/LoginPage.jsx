@@ -103,26 +103,27 @@ const LoginPage = () => {
         (state) => state.auth
     );
 
-    useEffect(() => {
-        if (isError) {
-            setError(message);
-        }
+   useEffect(() => {
+    if (isError) {
+        setError(message);
+        return;
+    }
 
-        // Redirect when logged in
-        if (isSuccess || user) {
-            // Redirect based on user type
-            if (user.userType === 'admin' || user.role === 'admin') {
-                navigate('/salesman-management');
-            } else {
-                navigate('/dashboard');
-            }
-        }
+    if (isSuccess && user) {
+        const role = user.role || user.userType;
 
-        // Reset state on unmount
-        return () => {
-            dispatch(reset());
-        };
-    }, [user, isError, isSuccess, message, navigate, dispatch]);
+        if (role === 'admin') {
+            navigate('/salesman-management');
+        } else {
+            navigate('/dashboard');
+        }
+    }
+
+    return () => {
+        dispatch(reset());
+    };
+}, [user, isError, isSuccess, message, navigate, dispatch]);
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
