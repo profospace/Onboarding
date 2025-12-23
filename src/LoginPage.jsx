@@ -103,8 +103,17 @@ const LoginPage = () => {
         (state) => state.auth
     );
 
-  useEffect(() => {
+ useEffect(() => {
+    console.log('[LOGIN EFFECT]', {
+        isLoading,
+        isSuccess,
+        isError,
+        user,
+        message,
+    });
+
     if (isError) {
+        console.error('[LOGIN ERROR]', message);
         setError(message);
         return;
     }
@@ -112,14 +121,26 @@ const LoginPage = () => {
     if (isSuccess && user) {
         const role = user.role || user.userType;
 
+    
+
+        console.log('[LOGIN SUCCESS] role:', role);
+
         if (role === 'admin') {
+            console.log('➡️ Redirecting to /salesman-management');
             navigate('/salesman-management', { replace: true });
         } else {
+            console.log('➡️ Redirecting to /dashboard');
             navigate('/dashboard', { replace: true });
         }
     }
-}, [user, isError, isSuccess, message, navigate]);
-
+}, [
+    user,
+    isLoading,
+    isError,
+    isSuccess,
+    message,
+    navigate
+]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
