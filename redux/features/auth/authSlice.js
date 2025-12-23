@@ -78,34 +78,41 @@ export const authSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(register.pending, (state) => {
+                console.log('[REDUCER] register.pending payload:', action.payload);
                 state.isLoading = true;
             })
             .addCase(register.fulfilled, (state, action) => {
+                console.log('[REDUCER] register.fulfilled payload:', action.payload);
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.user = action.payload.data;
+                state.user = action.payload;
             })
             .addCase(register.rejected, (state, action) => {
+                console.log('[REDUCER] register.rejected payload:', action.payload);
                 state.isLoading = false;
                 state.isError = true;
-                state.message = action.payload.data;
+                state.message = action.payload;
                 state.user = null;
             })
             .addCase(login.pending, (state) => {
+                  console.log('[REDUCER] login.fulfilled payload:', action.payload);
                 state.isLoading = true;
             })
             .addCase(login.fulfilled, (state, action) => {
+                console.log('[REDUCER] login.fulfilled payload:', action.payload);
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.user = action.payload.data;
+                state.user = action.payload;
             })
             .addCase(login.rejected, (state, action) => {
+                  console.log('[REDUCER] login.rejected payload:', action.payload);
                 state.isLoading = false;
                 state.isError = true;
-                state.message = action.payload.data;
+                state.message = action.payload;
                 state.user = null;
             })
             .addCase(logout.fulfilled, (state) => {
+                  console.log('[REDUCER] logout.fulfilled payload:', action.payload);
                 state.user = null;
             });
     },
