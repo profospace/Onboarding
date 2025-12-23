@@ -103,7 +103,7 @@ const LoginPage = () => {
         (state) => state.auth
     );
 
-   useEffect(() => {
+  useEffect(() => {
     if (isError) {
         setError(message);
         return;
@@ -113,16 +113,12 @@ const LoginPage = () => {
         const role = user.role || user.userType;
 
         if (role === 'admin') {
-            navigate('/salesman-management');
+            navigate('/salesman-management', { replace: true });
         } else {
-            navigate('/dashboard');
+            navigate('/dashboard', { replace: true });
         }
     }
-
-    return () => {
-        dispatch(reset());
-    };
-}, [user, isError, isSuccess, message, navigate, dispatch]);
+}, [user, isError, isSuccess, message, navigate]);
 
 
     const handleChange = (e) => {
