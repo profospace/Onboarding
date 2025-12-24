@@ -1,5 +1,6 @@
-import axios from 'axios';
 import { base_url } from '../../../utils/base_url';
+import api from '../../../utils/api';
+
 
 // Base URLs for different user types
 const API_BASE_URL = `${base_url}/api`;
@@ -7,12 +8,18 @@ const SALESMAN_API = `${API_BASE_URL}/salesmen`;
 const ADMIN_API = `${API_BASE_URL}/adminSales`;
 
 // Register user
+// Register user
 const register = async (userData) => {
-    const response = await axios.post(`${SALESMAN_API}/register`, userData);
-    if (response.data) {
-        localStorage.setItem('user', JSON.stringify(response.data.data.salesman));
+    const response = await api.post('/salesmen/register', userData);
+
+    if (response.data?.data) {
+        localStorage.setItem(
+            'user',
+            JSON.stringify(response.data.data.salesman)
+        );
         localStorage.setItem('token', response.data.data.token);
     }
+
     return response.data;
 };
 
@@ -21,29 +28,25 @@ const login = async (userData) => {
     console.log('[AUTH SERVICE] Login called');
     console.log('[AUTH SERVICE] Payload:', {
         username: userData.username,
-        isAdmin: userData.isAdmin
+        isAdmin: userData.isAdmin,
     });
 
     const endpoint = userData.isAdmin
-        ? `${ADMIN_API}/login`
-        : `${SALESMAN_API}/login`;
+        ? '/adminSales/login'
+        : '/salesmen/login';
 
     console.log('[AUTH SERVICE] Using endpoint:', endpoint);
 
     try {
-        const response = await axios.post(endpoint, {
+        const response = await api.post(endpoint, {
             username: userData.username,
-            password: userData.password
+            password: userData.password,
         });
 
         console.log('[AUTH SERVICE] Raw response:', response.data);
 
         const data = response.data?.data;
-
-        if (!data) {
-            console.error('[AUTH SERVICE] Missing `data` in response');
-            throw 'Invalid server response';
-        }
+        if (!data) throw 'Invalid server response';
 
         let user;
 
@@ -53,23 +56,21 @@ const login = async (userData) => {
 
             user = {
                 role: 'admin',
-                token: data.token,
                 userType: 'admin',
+                token: data.token,
             };
         }
         // 🔑 SALESMAN LOGIN
         else {
             console.log('[AUTH SERVICE] Processing SALESMAN login');
 
-            if (!data.salesman) {
-                console.error('[AUTH SERVICE] Missing salesman object in response');
-                throw 'Invalid salesman response';
-            }
+            if (!data.salesman) throw 'Invalid salesman response';
 
             user = {
                 ...data.salesman,
-                token: data.token,
+                role: 'salesman',
                 userType: 'salesman',
+                token: data.token,
             };
         }
 
@@ -78,20 +79,15 @@ const login = async (userData) => {
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('token', user.token);
 
-        console.log('[AUTH SERVICE] User stored in localStorage');
-
         return user; // ✅ Redux receives THIS
     } catch (error) {
-        console.error('[AUTH SERVICE] Login failed:', error);
-
         const message =
             error.response?.data?.message ||
             error.message ||
             error ||
             'Login failed';
 
-        console.error('[AUTH SERVICE] Error message resolved:', message);
-
+        console.error('[AUTH SERVICE] Login failed:', message);
         throw message;
     }
 };
