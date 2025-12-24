@@ -31,21 +31,34 @@ export const register = createAsyncThunk(
 );
 
 // Login user
+// export const login = createAsyncThunk(
+//     'auth/login',
+//     async (user, thunkAPI) => {
+//         try {
+//             return await authService.login(user);
+//         } catch (error) {
+//             const message =
+//                 (error.response &&
+//                     error.response.data &&
+//                     error.response.data.message) ||
+//                 error.message ||
+//                 error.toString();
+//             return thunkAPI.rejectWithValue(message);
+//         }
+//     }
+// );
+
+
 export const login = createAsyncThunk(
-    'auth/login',
-    async (user, thunkAPI) => {
-        try {
-            return await authService.login(user);
-        } catch (error) {
-            const message =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
-            return thunkAPI.rejectWithValue(message);
-        }
+  'auth/login',
+  async (user, thunkAPI) => {
+    try {
+      return await authService.login(user);
+    } catch (error) {
+      // 🔑 MUST return this
+      return thunkAPI.rejectWithValue(error);
     }
+  }
 );
 
 // export const login = createAsyncThunk(
@@ -76,46 +89,41 @@ export const authSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder
-            .addCase(register.pending, (state) => {
-                console.log('[REDUCER] register.pending payload:', action.payload);
-                state.isLoading = true;
-            })
-            .addCase(register.fulfilled, (state, action) => {
-                console.log('[REDUCER] register.fulfilled payload:', action.payload);
-                state.isLoading = false;
-                state.isSuccess = true;
-                state.user = action.payload;
-            })
-            .addCase(register.rejected, (state, action) => {
-                console.log('[REDUCER] register.rejected payload:', action.payload);
-                state.isLoading = false;
-                state.isError = true;
-                state.message = action.payload;
-                state.user = null;
-            })
-            .addCase(login.pending, (state) => {
-                  console.log('[REDUCER] login.fulfilled payload:', action.payload);
-                state.isLoading = true;
-            })
-            .addCase(login.fulfilled, (state, action) => {
-                console.log('[REDUCER] login.fulfilled payload:', action.payload);
-                state.isLoading = false;
-                state.isSuccess = true;
-                state.user = action.payload;
-            })
-            .addCase(login.rejected, (state, action) => {
-                  console.log('[REDUCER] login.rejected payload:', action.payload);
-                state.isLoading = false;
-                state.isError = true;
-                state.message = action.payload;
-                state.user = null;
-            })
-            .addCase(logout.fulfilled, (state) => {
-                  console.log('[REDUCER] logout.fulfilled payload:', action.payload);
-                state.user = null;
-            });
-    },
+    builder
+        .addCase(register.pending, (state) => {
+            console.log('[REDUCER] register.pending');
+            state.isLoading = true;
+        })
+        .addCase(register.fulfilled, (state, action) => {
+            console.log('[REDUCER] register.fulfilled payload:', action.payload);
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.user = action.payload;
+        })
+        .addCase(login.pending, (state) => {
+            console.log('[REDUCER] login.pending');
+            state.isLoading = true;
+        })
+        .addCase(login.fulfilled, (state, action) => {
+            console.log('[REDUCER] login.fulfilled payload:', action.payload);
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.isError = false;
+            state.user = action.payload;
+        })
+        .addCase(login.rejected, (state, action) => {
+            console.log('[REDUCER] login.rejected payload:', action.payload);
+            state.isLoading = false;
+            state.isError = true;
+            state.isSuccess = false;
+            state.user = null;
+            state.message = action.payload;
+        })
+        .addCase(logout.fulfilled, (state) => {
+            console.log('[REDUCER] logout.fulfilled');
+            state.user = null;
+        });
+}
 });
 
 export const { reset } = authSlice.actions;
