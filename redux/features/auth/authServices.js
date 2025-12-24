@@ -7,127 +7,22 @@ const API_BASE_URL = `${base_url}/api`;
 const SALESMAN_API = `${API_BASE_URL}/salesmen`;
 const ADMIN_API = `${API_BASE_URL}/adminSales`;
 
-// // Register user
-// const register = async (userData) => {
-//     const response = await api.post('/salesmen/register', userData);
-
-//     if (response.data?.data) {
-//         localStorage.setItem(
-//             'user',
-//             JSON.stringify(response.data.data.salesman)
-//         );
-//         localStorage.setItem('token', response.data.data.token);
-//     }
-
-//     return response.data;
-// };
-
-// // Login user
-// const login = async (userData) => {
-//     console.log('[AUTH SERVICE] Login called');
-//     console.log('[AUTH SERVICE] Payload:', {
-//         username: userData.username,
-//         isAdmin: userData.isAdmin,
-//     });
-
-//     const endpoint = userData.isAdmin
-//         ? '/adminSales/login'
-//         : '/salesmen/login';
-
-//     console.log('[AUTH SERVICE] Using endpoint:', endpoint);
-
-//     try {
-//         const response = await api.post(endpoint, {
-//             username: userData.username,
-//             password: userData.password,
-//         });
-
-//         console.log('[AUTH SERVICE] Raw response:', response.data);
-
-//         const data = response.data?.data;
-//         if (!data) throw 'Invalid server response';
-
-//         let user;
-
-//         // 🔑 ADMIN LOGIN
-//         if (userData.isAdmin) {
-//             console.log('[AUTH SERVICE] Processing ADMIN login');
-
-//             user = {
-//                 role: 'admin',
-//                 userType: 'admin',
-//                 token: data.token,
-//             };
-//         }
-//         // 🔑 SALESMAN LOGIN
-//         else {
-//             console.log('[AUTH SERVICE] Processing SALESMAN login');
-
-//             if (!data.salesman) throw 'Invalid salesman response';
-
-//             user = {
-//                 ...data.salesman,
-//                 role: 'salesman',
-//                 userType: 'salesman',
-//                 token: data.token,
-//             };
-//         }
-
-//         console.log('[AUTH SERVICE] Normalized user object:', user);
-
-//         localStorage.setItem('user', JSON.stringify(user));
-//         localStorage.setItem('token', user.token);
-
-//         return user; // ✅ Redux receives THIS
-//     } catch (error) {
-//         const message =
-//             error.response?.data?.message ||
-//             error.message ||
-//             error ||
-//             'Login failed';
-
-//         console.error('[AUTH SERVICE] Login failed:', message);
-//         throw message;
-//     }
-// };
-
-// // Logout user
-// const logout = () => {
-//     localStorage.removeItem('user');
-//     localStorage.removeItem('token');
-// };
-
-// const authService = {
-//     register,
-//     login,
-//     logout,
-// };
-
-// export default authService;
-
-
-
-
-// --------------------
-// Role → API mapping
-// --------------------
-const ROLE_API = {
-  admin: '/adminSales',
-  salesman: '/salesmen',
-};
-
-// --------------------
-// Get base route by role
-// --------------------
-const getBaseRoute = () => {
+// 🔑 Role-based base path resolver
+const getBaseByUser = () => {
   const user = JSON.parse(localStorage.getItem('user'));
-  if (!user?.role) throw new Error('User role missing');
-  return ROLE_API[user.role];
+
+  if (!user || !user.role) {
+    throw new Error('User not found or role missing');
+  }
+
+  return user.role === 'admin'
+    ? '/adminSales'
+    : '/salesmen';
 };
 
-// --------------------
-// Register (salesman only)
-// --------------------
+/* ======================================================
+   REGISTER (still SALESMAN ONLY – correct as-is)
+   ====================================================== */
 const register = async (userData) => {
   const response = await api.post('/salesmen/register', userData);
 
@@ -142,10 +37,12 @@ const register = async (userData) => {
   return response.data;
 };
 
-// --------------------
-// Login
-// --------------------
+/* ======================================================
+   LOGIN (explicit routes – DO NOT auto-resolve)
+   ====================================================== */
 const login = async (userData) => {
+  console.log('[AUTH SERVICE] Login called', userData);
+
   const endpoint = userData.isAdmin
     ? '/adminSales/login'
     : '/salesmen/login';
@@ -159,57 +56,54 @@ const login = async (userData) => {
     const data = response.data?.data;
     if (!data) throw 'Invalid server response';
 
-    const user = userData.isAdmin
-      ? {
-          role: 'admin',
-          userType: 'admin',
-          token: data.token,
-        }
-      : {
-          ...data.salesman,
-          role: 'salesman',
-          userType: 'salesman',
-          token: data.token,
-        };
+    let user;
+
+    if (userData.isAdmin) {
+      user = {
+        role: 'admin',
+        userType: 'admin',
+        token: data.token,
+      };
+    } else {
+      user = {
+        ...data.salesman,
+        role: 'salesman',
+        userType: 'salesman',
+        token: data.token,
+      };
+    }
 
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('token', user.token);
 
     return user;
   } catch (error) {
-    throw (
+    const message =
       error.response?.data?.message ||
       error.message ||
-      'Login failed'
-    );
+      error ||
+      'Login failed';
+
+    throw message;
   }
 };
 
-// --------------------
-// Role-aware API calls
-// --------------------
-const roleApi = {
-  get: (url, config) => api.get(`${getBaseRoute()}${url}`, config),
-  post: (url, data, config) =>
-    api.post(`${getBaseRoute()}${url}`, data, config),
-  patch: (url, data, config) =>
-    api.patch(`${getBaseRoute()}${url}`, data, config),
-  delete: (url, config) =>
-    api.delete(`${getBaseRoute()}${url}`, config),
-};
-
-// --------------------
-// Logout
-// --------------------
+/* ======================================================
+   LOGOUT
+   ====================================================== */
 const logout = () => {
   localStorage.removeItem('user');
   localStorage.removeItem('token');
 };
 
-// --------------------
-export default {
+/* ======================================================
+   ✅ EXPORTS
+   ====================================================== */
+const authService = {
   register,
   login,
   logout,
-  roleApi,
+  getBaseByUser, // 👈 USE THIS IN OTHER API CALL FILES
 };
+
+export default authService;
