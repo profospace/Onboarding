@@ -9,7 +9,7 @@ const SALESMAN_API = `${API_BASE_URL}/salesmen`;
 // Register user
 const getAllSalesman = async () => {
     // const response = await axios.post(`${SALESMAN_API}/all-salesman`);
-    const response = await adminAxios.get(`${SALESMAN_API}/all-salesman`);
+    const response = await adminAxios.get(`${SALESMAN_API}/all`);
     // console.log("response" , response)
     return response.data;
 };

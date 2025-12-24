@@ -2679,7 +2679,7 @@ const RealEstateOnboarding = ({ user }) => {
     // get all salesman
     const getAllSalesman = async () => {
         try {
-            const response = await axios.get(`${base_url}/api/adminSales/all-salesman-no-limit`, {
+            const response = await axios.get(`${base_url}/api/adminSales/all-no-limit`, {
                 headers: { Authorization: `Bearer ${details?.token}` }
             });
             setSalesmanList(response.data.data);

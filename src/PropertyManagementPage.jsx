@@ -1704,7 +1704,7 @@ const PropertyManagementPage = ({ user, onLogout }) => {
     const fetchSalesmen = async () => {
         try {
             const details = JSON.parse(localStorage.getItem('user'));
-            const response = await axios.get(`${API_BASE_URL}/salesmen/all-salesman`, {
+            const response = await axios.get(`${API_BASE_URL}/salesmen/all`, {
                 headers: { Authorization: `Bearer ${details?.token}` }
             });
 
