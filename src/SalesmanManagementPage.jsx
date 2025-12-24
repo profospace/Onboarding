@@ -781,44 +781,37 @@
 
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { base_url } from '../utils/base_url';
+import api from '../utils/api';
 
-const API_BASE_URL = `${base_url}/api/salesmen`;
+const SALESMAN_API = '/salesmen';
 
-const SalesmanManagementPage = ({ user, onLogout }) => {
-    // State for salesmen data
+const SalesmanManagementPage = () => {
     const [salesmen, setSalesmen] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
-    // State for form data
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         phone: '',
         role: 'salesman',
-        assignedAreas: []
+        assignedAreas: [],
     });
 
-    // State for search and filters
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [roleFilter, setRoleFilter] = useState('all');
 
-    // State for area input
     const [cityInput, setCityInput] = useState('');
     const [localityInput, setLocalityInput] = useState('');
     const [tempAssignedAreas, setTempAssignedAreas] = useState([]);
 
-    // State for pagination
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [limit, setLimit] = useState(10);
+    const [limit] = useState(10);
 
-    // State for modals
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isResetPasswordModalOpen, setIsResetPasswordModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -826,147 +819,119 @@ const SalesmanManagementPage = ({ user, onLogout }) => {
     const [tempPassword, setTempPassword] = useState('');
     const [userName, setUserName] = useState('');
 
-    // Fetch salesmen data
+    /* =========================
+       FETCH SALESMEN
+    ========================= */
     const fetchSalesmen = async () => {
         try {
             setLoading(true);
 
-            // Create query parameters
-            const params = new URLSearchParams();
-            if (searchQuery) params.append('search', searchQuery);
-            if (statusFilter !== 'all') params.append('status', statusFilter);
-            if (roleFilter !== 'all') params.append('role', roleFilter);
-            params.append('page', page);
-            params.append('limit', limit);
+            const params = {
+                page,
+                limit,
+            };
 
-            // const token = localStorage.getItem('token');
-            const details = JSON.parse(localStorage.getItem('user'))
-            const response = await axios.get(`${API_BASE_URL}/all-salesman/?${params.toString()}`, {
-                headers: { Authorization: `Bearer ${details?.token}` }
-            });
+            if (searchQuery) params.search = searchQuery;
+            if (statusFilter !== 'all') params.status = statusFilter;
+            if (roleFilter !== 'all') params.role = roleFilter;
 
-            setSalesmen(response.data.data.salesmen);
-            setTotalPages(response.data.data.pagination.pages);
-            setLoading(false);
+            const res = await api.get(`${SALESMAN_API}/all-salesman`, { params });
+
+            setSalesmen(res.data.data.salesmen);
+            setTotalPages(res.data.data.pagination.pages);
         } catch (err) {
-            console.error('Error fetching salesmen:', err);
+            console.error('[FETCH SALESMEN ERROR]', err);
             setError('Failed to load salesmen data. Please try again.');
+        } finally {
             setLoading(false);
         }
     };
 
-    // Fetch data on mount and when filters change
     useEffect(() => {
         fetchSalesmen();
-    }, [searchQuery, statusFilter, roleFilter, page, limit]);
+    }, [searchQuery, statusFilter, roleFilter, page]);
 
-    // Handle form input changes
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
-
-    // Handle city and locality input for assigned areas
-    const handleAddArea = () => {
-        if (cityInput.trim()) {
-            const newArea = {
-                city: cityInput.trim(),
-                localities: localityInput.trim() ? localityInput.split(',').map(l => l.trim()) : []
-            };
-
-            setTempAssignedAreas(prev => [...prev, newArea]);
-            setCityInput('');
-            setLocalityInput('');
-        }
-    };
-
-    // Handle removing an area
-    const handleRemoveArea = (index) => {
-        setTempAssignedAreas(prev => prev.filter((_, i) => i !== index));
-    };
-
-    // Create new salesman
+    /* =========================
+       CREATE SALESMAN
+    ========================= */
     const handleCreateSalesman = async (e) => {
         e.preventDefault();
-
         try {
-            const token = localStorage.getItem('token');
             const payload = {
                 ...formData,
-                assignedAreas: tempAssignedAreas
+                assignedAreas: tempAssignedAreas,
             };
 
-            const response = await axios.post(`${API_BASE_URL}/create`, payload, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await api.post(`${SALESMAN_API}/create`, payload);
 
-            // Show credentials and close modal
-            setTempPassword(response.data.data.credentials.temporaryPassword);
-            setUserName(response.data.data.credentials.username);
+            setTempPassword(res.data.data.credentials.temporaryPassword);
+            setUserName(res.data.data.credentials.username);
+
             setIsCreateModalOpen(false);
-
-            // Reset form data
             setFormData({
                 name: '',
                 email: '',
                 phone: '',
                 role: 'salesman',
-                assignedAreas: []
+                assignedAreas: [],
             });
             setTempAssignedAreas([]);
 
-            // Refresh salesmen list
             fetchSalesmen();
         } catch (err) {
-            console.error('Error creating salesman:', err);
-            setError('Failed to create salesman. Please try again.');
+            console.error('[CREATE SALESMAN ERROR]', err);
+            setError('Failed to create salesman.');
         }
     };
 
-    // Reset salesman password
+    /* =========================
+       RESET PASSWORD
+    ========================= */
     const handleResetPassword = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post(`${API_BASE_URL}/${selectedSalesmanId}/reset-password`, {}, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await api.post(
+                `${SALESMAN_API}/${selectedSalesmanId}/reset-password`
+            );
 
-            setTempPassword(response.data.data.temporaryPassword);
+            setTempPassword(res.data.data.temporaryPassword);
             setIsResetPasswordModalOpen(false);
         } catch (err) {
-            console.error('Error resetting password:', err);
-            setError('Failed to reset password. Please try again.');
+            console.error('[RESET PASSWORD ERROR]', err);
+            setError('Failed to reset password.');
         }
     };
 
-    // Delete salesman
+    /* =========================
+       DELETE SALESMAN
+    ========================= */
     const handleDeleteSalesman = async () => {
         try {
-            const token = localStorage.getItem('token');
-            await axios.delete(`${API_BASE_URL}/${selectedSalesmanId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-
+            await api.delete(`${SALESMAN_API}/${selectedSalesmanId}`);
             setIsDeleteModalOpen(false);
             fetchSalesmen();
         } catch (err) {
-            console.error('Error deleting salesman:', err);
-            setError('Failed to delete salesman. Please try again.');
+            console.error('[DELETE SALESMAN ERROR]', err);
+            setError('Failed to delete salesman.');
         }
     };
 
-    // Format date
-    const formatDate = (dateString) => {
-        if (!dateString) return 'N/A';
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
-    };
+    /* =========================
+       HELPERS
+    ========================= */
+    const formatDate = (dateString) =>
+        dateString
+            ? new Date(dateString).toLocaleDateString(undefined, {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+              })
+            : 'N/A';
 
-    return (
-        <div className="container mx-auto px-4 py-8">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-8">
-                <div>
+        return (
+            <div className="container mx-auto px-4 py-8">
+                {/* Header */}
+                <div className="flex justify-between items-center mb-8">
+                    <div>
                     <h1 className="text-3xl font-bold mb-2">Salesman Management</h1>
                     <p className="text-gray-600">Create and manage salesman accounts</p>
                 </div>
