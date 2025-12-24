@@ -10,24 +10,32 @@ api.interceptors.request.use(
     const token = localStorage.getItem('token');
 
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;x
     }
 
     return config;
   },
   (error) => Promise.reject(error)
 );
-
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      console.warn('[API] 401 detected, logging out');
+  (res) => res,
+  (err) => {
+    const status = err.response?.status;
+    const url = err.config?.url || '';
+
+    // Only force logout on AUTH endpoints
+    const isAuthError =
+      status === 401 &&
+      (url.includes('/login') || url.includes('/me'));
+
+    if (isAuthError) {
+      console.warn('[API] Auth expired, logging out');
       localStorage.removeItem('user');
       localStorage.removeItem('token');
       window.location.href = '/login';
     }
-    return Promise.reject(error);
+
+    return Promise.reject(err);
   }
 );
 
