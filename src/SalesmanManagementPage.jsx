@@ -779,12 +779,14 @@
 
 // export default SalesmanManagementPage;
 
+import authService from '../redux/features/auth/authServices';
+const BASE_API = authService.getBaseByUser();
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 
-const SALESMAN_API = '/salesmen';
+const SALESMAN_API = BASE_API;
 
 const SalesmanManagementPage = () => {
     const [salesmen, setSalesmen] = useState([]);
