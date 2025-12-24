@@ -1,4 +1,4 @@
-// import axios from 'axios';
+import axios from 'axios';
 import { base_url } from './base_url';
 
 
