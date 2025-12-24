@@ -5,25 +5,28 @@ const api = axios.create({
   baseURL: `${base_url}/api`,
 });
 
+// 👉 Attach token on every request
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
 
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;x
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
     return config;
   },
   (error) => Promise.reject(error)
 );
+
+// 👉 Handle auth expiry safely
 api.interceptors.response.use(
   (res) => res,
   (err) => {
     const status = err.response?.status;
     const url = err.config?.url || '';
 
-    // Only force logout on AUTH endpoints
+    // Only logout on auth-related failures
     const isAuthError =
       status === 401 &&
       (url.includes('/login') || url.includes('/me'));
