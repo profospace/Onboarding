@@ -42,4 +42,18 @@ api.interceptors.response.use(
   }
 );
 
+export const getRoleApi = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  if (!user || !user.role) {
+    throw new Error('User not authenticated');
+  }
+
+  return {
+    role: user.role,
+    base: user.role === 'admin' ? '/adminSales' : '/salesmen',
+    api,
+  };
+};
+
 export default api;

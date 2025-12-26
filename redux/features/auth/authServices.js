@@ -24,73 +24,103 @@ const register = async (userData) => {
 };
 
 // Login user
+// const login = async (userData) => {
+//     console.log('[AUTH SERVICE] Login called');
+//     console.log('[AUTH SERVICE] Payload:', {
+//         username: userData.username,
+//         isAdmin: userData.isAdmin,
+//     });
+
+//     const endpoint = userData.isAdmin
+//         ? '/adminSales/login'
+//         : '/salesmen/login';
+
+//     console.log('[AUTH SERVICE] Using endpoint:', endpoint);
+
+//     try {
+//         const response = await api.post(endpoint, {
+//             username: userData.username,
+//             password: userData.password,
+//         });
+
+//         console.log('[AUTH SERVICE] Raw response:', response.data);
+
+//         const data = response.data?.data;
+//         if (!data) throw 'Invalid server response';
+
+//         let user;
+
+//         // 🔑 ADMIN LOGIN
+//         if (userData.isAdmin) {
+//             console.log('[AUTH SERVICE] Processing ADMIN login');
+
+//             user = {
+//                 role: 'admin',
+//                 userType: 'admin',
+//                 token: data.token,
+//             };
+//         }
+//         // 🔑 SALESMAN LOGIN
+//         else {
+//             console.log('[AUTH SERVICE] Processing SALESMAN login');
+
+//             if (!data.salesman) throw 'Invalid salesman response';
+
+//             user = {
+//                 ...data.salesman,
+//                 role: 'salesman',
+//                 userType: 'salesman',
+//                 token: data.token,
+//             };
+//         }
+
+//         console.log('[AUTH SERVICE] Normalized user object:', user);
+
+//         localStorage.setItem('user', JSON.stringify(user));
+//         localStorage.setItem('token', user.token);
+
+//         return user; // ✅ Redux receives THIS
+//     } catch (error) {
+//         const message =
+//             error.response?.data?.message ||
+//             error.message ||
+//             error ||
+//             'Login failed';
+
+//         console.error('[AUTH SERVICE] Login failed:', message);
+//         throw message;
+//     }
+// };
+
+
+
 const login = async (userData) => {
-    console.log('[AUTH SERVICE] Login called');
-    console.log('[AUTH SERVICE] Payload:', {
-        username: userData.username,
-        isAdmin: userData.isAdmin,
-    });
+  const endpoint = userData.isAdmin
+    ? `${ADMIN_API}/login`
+    : `${SALESMAN_API}/login`;
 
-    const endpoint = userData.isAdmin
-        ? '/adminSales/login'
-        : '/salesmen/login';
+  const response = await api.post(endpoint, {
+    username: userData.username,
+    password: userData.password,
+  });
 
-    console.log('[AUTH SERVICE] Using endpoint:', endpoint);
+  const data = response.data?.data;
+  if (!data) throw 'Invalid response';
 
-    try {
-        const response = await api.post(endpoint, {
-            username: userData.username,
-            password: userData.password,
-        });
+  const user = userData.isAdmin
+    ? { role: 'admin', userType: 'admin', token: data.token }
+    : { ...data.salesman, role: 'salesman', userType: 'salesman', token: data.token };
 
-        console.log('[AUTH SERVICE] Raw response:', response.data);
+  localStorage.setItem('user', JSON.stringify(user));
+  localStorage.setItem('token', user.token);
 
-        const data = response.data?.data;
-        if (!data) throw 'Invalid server response';
-
-        let user;
-
-        // 🔑 ADMIN LOGIN
-        if (userData.isAdmin) {
-            console.log('[AUTH SERVICE] Processing ADMIN login');
-
-            user = {
-                role: 'admin',
-                userType: 'admin',
-                token: data.token,
-            };
-        }
-        // 🔑 SALESMAN LOGIN
-        else {
-            console.log('[AUTH SERVICE] Processing SALESMAN login');
-
-            if (!data.salesman) throw 'Invalid salesman response';
-
-            user = {
-                ...data.salesman,
-                role: 'salesman',
-                userType: 'salesman',
-                token: data.token,
-            };
-        }
-
-        console.log('[AUTH SERVICE] Normalized user object:', user);
-
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('token', user.token);
-
-        return user; // ✅ Redux receives THIS
-    } catch (error) {
-        const message =
-            error.response?.data?.message ||
-            error.message ||
-            error ||
-            'Login failed';
-
-        console.error('[AUTH SERVICE] Login failed:', message);
-        throw message;
-    }
+  return user;
 };
+
+
+
+
+
 
 // Logout user
 const logout = () => {

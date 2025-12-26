@@ -782,7 +782,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../utils/api';
+import { getRoleApi } from '../utils/api';
+
+const { api: roleApi, base } = getRoleApi();
 
 const SALESMAN_API = '/salesmen';
 
@@ -835,7 +837,7 @@ const SalesmanManagementPage = () => {
             if (statusFilter !== 'all') params.status = statusFilter;
             if (roleFilter !== 'all') params.role = roleFilter;
 
-            const res = await api.get(`${SALESMAN_API}/all-salesman`, { params });
+            const res = await roleApi.get(`${SALESMAN_API}/all-salesman`, { params });
 
             setSalesmen(res.data.data.salesmen);
             setTotalPages(res.data.data.pagination.pages);
@@ -862,7 +864,7 @@ const SalesmanManagementPage = () => {
                 assignedAreas: tempAssignedAreas,
             };
 
-            const res = await api.post(`${SALESMAN_API}/create`, payload);
+            const res = await roleApi.post(`${SALESMAN_API}/create`, payload);
 
             setTempPassword(res.data.data.credentials.temporaryPassword);
             setUserName(res.data.data.credentials.username);
@@ -889,7 +891,7 @@ const SalesmanManagementPage = () => {
     ========================= */
     const handleResetPassword = async () => {
         try {
-            const res = await api.post(
+            const res = await roleApi.post(
                 `${SALESMAN_API}/${selectedSalesmanId}/reset-password`
             );
 
@@ -906,7 +908,7 @@ const SalesmanManagementPage = () => {
     ========================= */
     const handleDeleteSalesman = async () => {
         try {
-            await api.delete(`${SALESMAN_API}/${selectedSalesmanId}`);
+            await roleApi.delete(`${SALESMAN_API}/${selectedSalesmanId}`);
             setIsDeleteModalOpen(false);
             fetchSalesmen();
         } catch (err) {
