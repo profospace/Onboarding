@@ -827,27 +827,23 @@ const SalesmanManagementPage = () => {
      FETCH SALESMEN
   ========================= */
   const fetchSalesmen = async () => {
-    try {
-      setLoading(true);
-      setError('');
+  try {
+    setLoading(true);
+    setError('');
 
-      const params = { page, limit };
+    const res = await roleApi.get(`${base}/all-salesman-no-limit`);
 
-      if (searchQuery) params.search = searchQuery;
-      if (statusFilter !== 'all') params.status = statusFilter;
-      if (roleFilter !== 'all') params.role = roleFilter;
-
-      const res = await roleApi.get(`${base}/all-salesman`, { params });
-
-      setSalesmen(res.data.data.salesmen || []);
-      setTotalPages(res.data.data.pagination?.pages || 1);
-    } catch (err) {
-      console.error('[FETCH SALESMEN ERROR]', err);
-      setError('Failed to load salesmen data. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    console.log('[FETCH SALESMEN RESPONSE]', res.data);
+    // Backend returns array directly
+    setSalesmen(res.data.data.salesman || []);
+    setTotalPages(1); // no pagination
+  } catch (err) {
+    console.error('[FETCH SALESMEN ERROR]', err);
+    setError('Failed to load salesmen data. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchSalesmen();
