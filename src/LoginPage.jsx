@@ -112,6 +112,9 @@ const LoginPage = () => {
         message,
     });
 
+    console.log('➡️ Redirecting to Login page after login');
+
+
     if (isError) {
         console.error('[LOGIN ERROR]', message);
         setError(message);

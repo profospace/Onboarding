@@ -837,7 +837,7 @@ const SalesmanManagementPage = () => {
             if (statusFilter !== 'all') params.status = statusFilter;
             if (roleFilter !== 'all') params.role = roleFilter;
 
-            const res = await roleApi.get(`${SALESMAN_API}/all-salesman`, { params });
+            const res = await roleApi.get(`/all-salesman`, { params });
 
             setSalesmen(res.data.data.salesmen);
             setTotalPages(res.data.data.pagination.pages);
