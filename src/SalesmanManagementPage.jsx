@@ -784,125 +784,126 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRoleApi } from '../utils/api';
 
-const { api: roleApi, base } = getRoleApi();
-
-const SALESMAN_API = '/salesmen';
-
 const SalesmanManagementPage = () => {
-    const [salesmen, setSalesmen] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({
+  // 🔑 Role-aware API (resolved once per render)
+  const { api: roleApi, base } = getRoleApi();
+
+  /* =========================
+     STATE
+  ========================= */
+  const [salesmen, setSalesmen] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    role: 'salesman',
+    assignedAreas: [],
+  });
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [roleFilter, setRoleFilter] = useState('all');
+
+  const [tempAssignedAreas, setTempAssignedAreas] = useState([]);
+
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
+
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isResetPasswordModalOpen, setIsResetPasswordModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const [selectedSalesmanId, setSelectedSalesmanId] = useState(null);
+  const [tempPassword, setTempPassword] = useState('');
+  const [userName, setUserName] = useState('');
+
+  /* =========================
+     FETCH SALESMEN
+  ========================= */
+  const fetchSalesmen = async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      const params = { page, limit };
+
+      if (searchQuery) params.search = searchQuery;
+      if (statusFilter !== 'all') params.status = statusFilter;
+      if (roleFilter !== 'all') params.role = roleFilter;
+
+      const res = await roleApi.get(`${base}/all-salesman`, { params });
+
+      setSalesmen(res.data.data.salesmen || []);
+      setTotalPages(res.data.data.pagination?.pages || 1);
+    } catch (err) {
+      console.error('[FETCH SALESMEN ERROR]', err);
+      setError('Failed to load salesmen data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSalesmen();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, statusFilter, roleFilter, page]);
+
+  /* =========================
+     CREATE SALESMAN
+  ========================= */
+  const handleCreateSalesman = async (e) => {
+    e.preventDefault();
+
+    try {
+      const payload = {
+        ...formData,
+        assignedAreas: tempAssignedAreas,
+      };
+
+      const res = await roleApi.post(`${base}/create`, payload);
+
+      setTempPassword(res.data.data.credentials?.temporaryPassword || '');
+      setUserName(res.data.data.credentials?.username || '');
+
+      setIsCreateModalOpen(false);
+      setFormData({
         name: '',
         email: '',
         phone: '',
         role: 'salesman',
         assignedAreas: [],
-    });
+      });
+      setTempAssignedAreas([]);
 
-    const [searchQuery, setSearchQuery] = useState('');
-    const [statusFilter, setStatusFilter] = useState('all');
-    const [roleFilter, setRoleFilter] = useState('all');
+      fetchSalesmen();
+    } catch (err) {
+      console.error('[CREATE SALESMAN ERROR]', err);
+      setError('Failed to create salesman.');
+    }
+  };
 
-    const [cityInput, setCityInput] = useState('');
-    const [localityInput, setLocalityInput] = useState('');
-    const [tempAssignedAreas, setTempAssignedAreas] = useState([]);
+  /* =========================
+     RESET PASSWORD
+  ========================= */
+  const handleResetPassword = async () => {
+    try {
+      const res = await roleApi.post(
+        `${base}/${selectedSalesmanId}/reset-password`
+      );
 
-    const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const [limit] = useState(10);
-
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-    const [isResetPasswordModalOpen, setIsResetPasswordModalOpen] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedSalesmanId, setSelectedSalesmanId] = useState(null);
-    const [tempPassword, setTempPassword] = useState('');
-    const [userName, setUserName] = useState('');
-
-    /* =========================
-       FETCH SALESMEN
-    ========================= */
-    const fetchSalesmen = async () => {
-        try {
-            setLoading(true);
-
-            const params = {
-                page,
-                limit,
-            };
-
-            if (searchQuery) params.search = searchQuery;
-            if (statusFilter !== 'all') params.status = statusFilter;
-            if (roleFilter !== 'all') params.role = roleFilter;
-
-            const res = await roleApi.get(`/all-salesman`, { params });
-
-            setSalesmen(res.data.data.salesmen);
-            setTotalPages(res.data.data.pagination.pages);
-        } catch (err) {
-            console.error('[FETCH SALESMEN ERROR]', err);
-            setError('Failed to load salesmen data. Please try again.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchSalesmen();
-    }, [searchQuery, statusFilter, roleFilter, page]);
-
-    /* =========================
-       CREATE SALESMAN
-    ========================= */
-    const handleCreateSalesman = async (e) => {
-        e.preventDefault();
-        try {
-            const payload = {
-                ...formData,
-                assignedAreas: tempAssignedAreas,
-            };
-
-            const res = await roleApi.post(`${SALESMAN_API}/create`, payload);
-
-            setTempPassword(res.data.data.credentials.temporaryPassword);
-            setUserName(res.data.data.credentials.username);
-
-            setIsCreateModalOpen(false);
-            setFormData({
-                name: '',
-                email: '',
-                phone: '',
-                role: 'salesman',
-                assignedAreas: [],
-            });
-            setTempAssignedAreas([]);
-
-            fetchSalesmen();
-        } catch (err) {
-            console.error('[CREATE SALESMAN ERROR]', err);
-            setError('Failed to create salesman.');
-        }
-    };
-
-    /* =========================
-       RESET PASSWORD
-    ========================= */
-    const handleResetPassword = async () => {
-        try {
-            const res = await roleApi.post(
-                `${SALESMAN_API}/${selectedSalesmanId}/reset-password`
-            );
-
-            setTempPassword(res.data.data.temporaryPassword);
-            setIsResetPasswordModalOpen(false);
-        } catch (err) {
-            console.error('[RESET PASSWORD ERROR]', err);
-            setError('Failed to reset password.');
-        }
-    };
-
+      setTempPassword(res.data.data.temporaryPassword || '');
+      setIsResetPasswordModalOpen(false);
+    } catch (err) {
+      console.error('[RESET PASSWORD ERROR]', err);
+      setError('Failed to reset password.');
+    }
+  };
     /* =========================
        DELETE SALESMAN
     ========================= */
